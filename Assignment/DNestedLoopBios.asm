@@ -23,7 +23,6 @@
     colour db ?
     tempVar db ?
 
-    coutnCol db 1
 .code 
 MacroDisMsg Macro msg
     lea dx, msg  

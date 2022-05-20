@@ -22,194 +22,17 @@ MacroClearScreen Macro colorVar
     mov dl,0        ;horizontal
     int 10h
 EndM
-    
-; Newline Macro 
-;     mov ah,2
-;     mov dl, 10 
-;     int 21h
-;     Mov dl, 13 
-;     int 21h
-; EndM
 
 main proc  
-
-   
-    MacroClearScreen 00h
-    
+MacroClearScreen 0fh
     mov ah,2
-    ; mov colour,10   ;first tri color
-    ; mov cx,1 ;j=1
-    ; mov bx,5 ;i=5
-    ; mov dh,1 ;row
-    ; mov dl,0 ;col
-    ; jmp NP01start
-    
-    ; NP01L1:                    
-    ;     dec bx ;bx=4
-    ;     CMP bx,4
-    ;     JE NP01L2
-    ;     CALL Newline
-    ;     inc dh
-    ;     mov dl,0
-        
-    ; NP01L2:
-    ;     push dx
-    ;     push cx
-    ;     push bx
-        
-    ;     mov bl,colour
-    ;     mov al,"*"
-    ;     mov cx,1
-    ;     CALL DisplayColour
-        
-    ;     pop bx
-    ;     pop cx
-    ;     pop dx
-    ;     inc dl
-    
-    ; NP01start:
-    ;     loop NP01L2
-        
-    ;     mov cx,7
-    ;     sub cx,bx
-    ;     CMP bx,0
-    ;     JE NestedLoopEnd ;jmp to end
-    ; loop NP01L1 
-
-    ; mov colour,12
-    ; mov cx,6
-    ; mov bx,5
-    ; mov dh,1
-    ; mov dl,9
-    ; jmp NP02start
-    
-    ; NP02L1:
-    ;     dec bx
-    ;     CALL Newline
-    ;     mov dl,9
-    ;     inc dh
-    
-    
-    ; NP02L2:
-    ;     push dx
-    ;     push cx
-    ;     push bx
-        
-    ;     mov bl,colour
-    ;     mov al,"*"
-    ;     mov cx,1
-    ;     CALL DisplayColour
-        
-    ;     pop bx
-    ;     pop cx
-    ;     pop dx
-    ;     inc dl
-    
-    
-    ; NP02start:
-    ;     loop NP02L2
-    ;     mov cx,bx
-    ;     loop NP02L1
-
-;--------------------------------------------------------------------------
-    ; mov colour,206
-    ; mov dh,7
-    ; mov dl,0
-    ; mov cx,1
-    ; mov bx,5  
-    ; mov al,49
-    ; mov number,al
-    ; jmp NP03start
-    
-    ; NP03L1: 
-    ;     dec bx
-    ;     CMP bx,4
-    ;     JE NP03L2
-    ;     CALL Newline
-    ;     inc dh
-    ;     mov dl,0
-    
-    ; NP03L2:
-    ;     push dx
-    ;     push cx
-    ;     push bx
-        
-    ;     mov bl,colour
-    ;     mov al,number
-    ;     mov cx,1
-    ;     CALL DisplayColour
-        
-    ;     pop bx
-    ;     pop cx
-    ;     pop dx
-    ;     inc dl
-    ;     inc number
-    
-    ; NP03start:
-    ;     loop NP03L2
-        
-    ;     mov cx,7
-    ;     sub cx,bx
-    ;     CMP bx,0
-    ;     JE NestedLoopEnd ;jmp to end
-        
-    ;     mov number,49
-    ; loop NP03L1
-
-;----------------------------------------------------
-    mov colour,18
-    mov cx,6
-    mov bx,5
-    mov dh,7
-    mov dl,9
-    mov al,49
-    mov number,al
-    jmp NP04start
-    
-    NP04L1:
-        dec bx
-        ; CALL Newline
-        mov dl,9
-        inc dh
-    
-    
-    NP04L2:
-        push dx
-        push cx
-        push bx
-        
-        mov bl,colour
-        mov al,number
-        mov cx,1
-        CALL DisplayColour
-        
-        pop bx
-        pop cx
-        pop dx
-        inc dl
-        inc number
-    
-    
-    NP04start:
-        loop NP04L2
-        mov cx,bx  
-        mov number,49
-        loop NP04L1
-    
+    call pattern3
 
 NestedLoopEnd:
     mov ah,4ch 
     int 21h 
 
 main endp
-
-NewLine proc
-    mov ah,2
-    mov dl, 10 
-    int 21h
-    Mov dl, 13 
-    int 21h
-NewLine endp
 DisplayColour proc   
     mov bh, 0 ;Display page
     mov ah, 02h ;SetCursorPosition
@@ -218,142 +41,9 @@ DisplayColour proc
     int 10h
     ret
 DisplayColour endp
-    
-topRightTriangle proc  
-    
-    ; mov colour,12
-    ; mov cx,6
-    ; mov bx,5
-    ; mov dh,1
-    ; mov dl,9
-    ; jmp NP02start
-    
-    ; NP02L1:
-    ;     dec bx
-    ;     CALL Newline
-    ;     mov dl,9
-    ;     inc dh
-    
-    
-    ; NP02L2:
-    ;     push dx
-    ;     push cx
-    ;     push bx
-        
-    ;     mov bl,colour
-    ;     mov al,"*"
-    ;     mov cx,1
-    ;     CALL DisplayColour
-        
-    ;     pop bx
-    ;     pop cx
-    ;     pop dx
-    ;     inc dl
-    
-    
-    ; NP02start:
-    ;     loop NP02L2
-    ;     mov cx,bx
-    ;     loop NP02L1
-    
-    ret
-topRightTriangle endp   
-
-bottomLeftTriangle proc  
-    ; mov colour,206
-    ; mov dh,7
-    ; mov dl,0
-    ; mov cx,1
-    ; mov bx,5  
-    ; mov al,49
-    ; mov number,al
-    ; jmp NP03start
-    
-    ; NP03L1: 
-    ;     dec bx
-    ;     CMP bx,4
-    ;     JE NP03L2
-    ;     CALL Newline
-    ;     inc dh
-    ;     mov dl,0
-    
-    ; NP03L2:
-    ;     push dx
-    ;     push cx
-    ;     push bx
-        
-    ;     mov bl,colour
-    ;     mov al,number
-    ;     mov cx,1
-    ;     CALL DisplayColour
-        
-    ;     pop bx
-    ;     pop cx
-    ;     pop dx
-    ;     inc dl
-    ;     inc number
-    
-    ; NP03start:
-    ;     loop NP03L2
-        
-    ;     mov cx,7
-    ;     sub cx,bx
-    ;     CMP bx,0
-    ;     JE nestedLoopPattern03_end ;jmp to end
-        
-    ;     mov number,49
-    ;     loop NP03L1
-    ;     nestedLoopPattern03_end:
-    
-    ret
-    
-bottomLeftTriangle endp
-
-bottomRightTriangle proc  
-    ; mov colour,18
-    ; mov cx,6
-    ; mov bx,5
-    ; mov dh,7
-    ; mov dl,9
-    ; mov al,49
-    ; mov number,al
-    ; jmp NP04start
-    
-    ; NP04L1:
-    ;     dec bx
-    ;     CALL Newline
-    ;     mov dl,9
-    ;     inc dh
-    
-    
-    ; NP04L2:
-    ;     push dx
-    ;     push cx
-    ;     push bx
-        
-    ;     mov bl,colour
-    ;     mov al,number
-    ;     mov cx,1
-    ;     CALL DisplayColour
-        
-    ;     pop bx
-    ;     pop cx
-    ;     pop dx
-    ;     inc dl
-    ;     inc number
-    
-    
-    ; NP04start:
-    ;     loop NP04L2
-    ;     mov cx,bx  
-    ;     mov number,49
-    ;     loop NP04L1
-    
-    ret
-bottomRightTriangle endp
 
 pattern3 proc near
-    MacroClearScreen 00h 
+    ; call CLS   
     
     mov colour,10
     mov dh,1
@@ -365,7 +55,7 @@ pattern3 proc near
     mov char,al   
     
     wloop1:
-        CALL Newline
+        ; call Newline
         inc char 
         mov dl,0
         inc dh

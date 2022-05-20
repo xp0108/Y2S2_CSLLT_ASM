@@ -22,8 +22,7 @@
     displayNoPttrn db "How many row you wanted to display [4~9]? $"
     colour db ?
     tempVar db ?
-
-    coutnCol db 1
+    tempVar2 db ?
 .code 
 MacroDisMsg Macro msg
     lea dx, msg  
@@ -53,134 +52,44 @@ MacroClearScreen Macro colorVar
 EndM
 
 main proc  
-    ; mov ax,@data
-    ; mov ds,ax
 
-    ; NestedLoopStart: 
-    ; MacroClearScreen 15h
-    ; MacroDisMsg msg4 
-    ; MacroDisMsg displayNoPttrn
-    ; MacroAcceptChar
-    ; cbw               ; AH = 0 or 0xFF according to top bit of AL/convert byte to word/ascii
-    ; mov  8 ;di, ax
-    ; cmp 8 ;di, '4'
-    ; jl NestedLoopStart
+    mov ah, 2
 
-    ; cmp 8 ;di, '9'
-    ; jg NestedLoopStart
-    ; sub 8 ;di, 48
-
-    mov ah,2
-    mov cx,8 ;di
-
-;TOP LEFT------------------------------------------------------------
-    MacroClearScreen 15h
-    mov dh,1 ;row
-    mov dl,0 ;col
-    mov cx,8 ;di
-    StartTopLeft:
+;------------------------------
+    mov cx, 4 ;row ,i=5,
+    mov bx, 4 ;j = column
+    ;num = tempVar
+    ;min = tempVar2/di
+    Upper:
+;-------------------------------
         push cx
-        StartTopLeftPrint:
-            mov colour, 9
-            mov bl,colour
-            mov al,42
-            mov ah, 2     ;cursor start at 0
-            int 10h
-            mov ah, 9     ; print horizontal
-            int 10h
-        loop StartTopLeftPrint
-
-        inc dh
-        pop cx
-    loop StartTopLeft
-
-;TOP RIGHT------------------------------------------------------------
-
-    mov dh,1 ;row
-    mov dl,18 ;col
-    mov cx,8 ;di ;row count
-    mov si,1
-    StartTopRight:
-        push cx 
-            mov cx, si ;cx=1
-            StartTopRightPrint:
-                mov colour, 1eh
-                mov bl,colour
-                mov al,42
-                mov ah, 2     ;cursor start at 0
-                int 10h
-                mov ah, 9     ; print horizontal
-                int 10h
-            loop StartTopRightPrint
-        inc si ;bx+1=2
+        mov cx, bx ;cx=1
         
-        inc dh  ;nextline
+
+        ;loop row
+        mov dl,52
+        mov tempVar,dl
+        UpperLeft:   
+        ;PRINT
+            mov dl, tempVar                 
+            int 21h
+
+            mov tempVar,dl
+            mov dl, 0   ;space
+            int 21h
+            dec tempVar
+        loop UpperLeft
         pop cx  ;4
-    loop StartTopRight
+;---------------------------
+        mov dl,10
+        int 21h
+    loop Upper
+;-----------------------------
+    int 21h
 
-;;BOTTOM LEFT-------------------------------------------------------
-
-;     mov dh,14    ;row
-;     mov dl,0    ;column
-;     mov cx,8 ;di ;row ,i=5
-;     mov si, 1 ;j = column
-;     ;num = tempVar
-;     NumberBottomLeft:
-
-;         push cx
-;         mov cx, si ;cx=1
-        
-;         mov al,49
-    
-;         mov tempVar,al
-
-;         NumberBottomLeftPrint:   
-;             mov al, tempVar                 
-;             mov bh, 0
-;             mov ah, 2 ;set cursor position
-;             int 10h
-;             mov ah, 09h ;display chara
-;             int 10h     ;call BIOS
-;             inc al
-;             mov tempVar,al
-;         loop NumberBottomLeftPrint
-        
-;         inc si ;bx+1=2
-        
-;         pop cx  ;4
-
-;         inc dh ;inc row
-;     loop NumberBottomLeft
-
-; ;BOTTOM RIGHT-----------------------------------------
-;     mov dh,14    ;row
-;     mov dl,18    ;column
-;     mov cx,8 ;di ;row count ,i=5
-;     NumberBottomRight:
-
-;         push cx
-;         mov colour, 4  ;
-;         mov bl,colour
-;         mov al,49
-;         mov tempVar,al
-;         NumberBottomRightPrint:   
-;             mov al, tempVar                 
-;             mov bh, 0
-;             mov ah, 2 ;set cursor position
-;             int 10h
-;             mov ah, 09h ;display chara
-;             int 10h     ;call BIOS
-;             inc al
-;             mov tempVar,al
-;         loop NumberBottomRightPrint
-;         pop cx  ;4
-
-;         inc dh  ;new row/newline
-;     loop NumberBottomRight
-
-NestedLoopEnd:
+SquaEnd:
     mov ah,4ch 
-    int 21h 
+    int 21h
 
 main endp
 end main
