@@ -104,10 +104,10 @@ main proc
     mov bl, 1 ;i=1, int i = 1
     UpperSquareOutter:
     ;UPPER SQUARE _ INNER LEFT
-    USIL: call UpperSquareInnerLeft
+    USIL: call SquareInnerLeft
 
     ;UPPER SQUARE _ INNER RIGHT
-    USIR: call UpperSquareInnerRight
+    USIR: call SquareInnerRight
 
 ;-----------INNER LOOP END--------------
     ExitUpperSquareOutter:
@@ -120,27 +120,26 @@ main proc
     cmp bl, 5
     jne UpperSquareOutter
 
-;-------------------------
+;---------UPPER SQUARE END----------------
 
 ;-------------------------
 ;LOWER SQUARE
-; LowerSquare:
-;     mov bl, 1 ;i=1, int i = 1
-;     LowerSquareOutter:
-;     ;UPPER SQUARE _ INNER LEFT
-;     LSIL: call LowwerSquareInnerLeft
-;     ;UPPER SQUARE _ INNER RIGHT
-;     LSIR: call UpperSquareInnerRight
+    mov bl, 3 ;i=1, int i = 1
+    LowerSquareOutter:
+    ;LOWER SQUARE _ INNER LEFT
+    LSIL: call SquareInnerLeft
 
-;     ExitLowerSquareOutter:
-;     mov ah,2
-;     mov dl,10
-;     int 21h
+    ;LOWER SQUARE _ INNER RIGHT
+    LSIR: call SquareInnerRight
+    
+    ExitLowerSquareOutter:
+    mov ah,2
+    mov dl,10
+    int 21h
 
-;     inc bl
-;     cmp bl, 5
-;     jne LowerSquareOutter
-;     je SquaEnd
+    dec bl
+    cmp bl, 0
+    jne LowerSquareOutter
 ;-------------------------
 
 SquaEnd:
@@ -148,8 +147,8 @@ SquaEnd:
     int 21h
 main endp
 
-UpperSquareInnerLeft PROC
-     mov cl, 1 ;int j = 1
+SquareInnerLeft PROC
+    mov cl, 1 ;int j = 1
     InnerLoopLeft:  
     mov tempVar, 52 ;tempVar = n = 4
 
@@ -182,10 +181,10 @@ UpperSquareInnerLeft PROC
     jne InnerLoopLeft
 
     ret
-UpperSquareInnerLeft endp
+SquareInnerLeft endp
 
 
-UpperSquareInnerRight PROC
+SquareInnerRight PROC
     mov cl, 3 ;int j = 3 (n-1)
     InnerLoopRight:
     mov tempVar, 52 ;tempVar = n = 4
@@ -220,18 +219,6 @@ UpperSquareInnerRight PROC
     
     jne InnerLoopRight
     ret
-UpperSquareInnerRight endp
-
-
-LowwerSquareInnerLeft PROC
-
-LowwerSquareInnerLeft endp
-
-
-LowerSquareInnerRight PROC
-
-LowerSquareInnerRight endp
-
-
+SquareInnerRight endp
 
 end main
