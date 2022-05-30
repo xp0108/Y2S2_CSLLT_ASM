@@ -65,18 +65,20 @@ main proc
         push cx
         mov cx, bx ;cx=1
         
-        ;loop row
         mov dl,52
-        mov tempVar,dl
+        mov tempVar,dl ;ASCII                
+        ;loop row
         InnerUpperLeft:   
-        ;PRINT
-            mov dl, tempVar ;ASCII                
-            int 21h
+            cmp    cx, bx   ;bx1, cx4  
+            jl Less 
+            mov dl, 55 ;7 row
+            jmp Both            
+            Less: 
+            mov dl, 52 ;4 column
+            Both:
 
-            mov tempVar,dl
-            mov dl, 0   ;space
+            ;out of if else  
             int 21h
-            dec tempVar
         loop InnerUpperLeft
         pop cx  ;4
 ;---------------------------

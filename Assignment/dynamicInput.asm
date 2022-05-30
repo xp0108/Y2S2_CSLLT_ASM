@@ -34,6 +34,7 @@ MAIN PROC
     mov ds,ax
     
    MacroDisMsg displayNoPttrn
+;    convert ASCII (dl,al) to 16
    mov ah,01
    int 21h
     cbw               ; AH = 0 or 0xFF according to top bit of AL, convert input into word
