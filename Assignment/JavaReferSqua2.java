@@ -65,7 +65,7 @@ public class CSLLTSqua {
 //        System.out.print("Enter the value of n: ");
 //        Scanner sc = new Scanner(System.in);
 //        n = sc.nextInt();
-        i=1;
+
         n = 4;
        
 //-----------------------------------------
