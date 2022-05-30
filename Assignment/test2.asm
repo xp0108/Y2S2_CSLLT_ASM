@@ -60,30 +60,29 @@ main proc
     mov bx, 4 ;j = column
     ;num = tempVar
     ;min = tempVar2/di
-    Upper:
+    OutterLoopUpper:
 ;-------------------------------
         push cx
         mov cx, bx ;cx=1
         
-
         ;loop row
         mov dl,52
         mov tempVar,dl
-        UpperLeft:   
+        InnerUpperLeft:   
         ;PRINT
-            mov dl, tempVar                 
+            mov dl, tempVar ;ASCII                
             int 21h
 
             mov tempVar,dl
             mov dl, 0   ;space
             int 21h
             dec tempVar
-        loop UpperLeft
+        loop InnerUpperLeft
         pop cx  ;4
 ;---------------------------
         mov dl,10
         int 21h
-    loop Upper
+    loop OutterLoopUpper
 ;-----------------------------
     int 21h
 
