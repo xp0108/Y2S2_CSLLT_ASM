@@ -108,6 +108,8 @@ main proc
 
     ;UPPER SQUARE _ INNER RIGHT
     USIR: call UpperSquareInnerRight
+
+;-----------INNER LOOP END--------------
     ExitUpperSquareOutter:
     
     mov ah,2
@@ -178,14 +180,46 @@ UpperSquareInnerLeft PROC
     inc cl
     cmp cl, 5
     jne InnerLoopLeft
-    je ExitUpperSquareOutter
 
     ret
 UpperSquareInnerLeft endp
 
 
 UpperSquareInnerRight PROC
+    mov cl, 3 ;int j = 3 (n-1)
+    InnerLoopRight:
+    mov tempVar, 52 ;tempVar = n = 4
 
+    ;IF ELSE START
+    cmp bl, cl
+    jl FirstInnerUpLeftIFFF
+    ;ELSE
+    SecondInnerUpLeftIFF:
+    sub tempVar, cl ;n - j
+    inc tempVar ;+1
+    mov ah, 2
+    mov dl, tempVar
+    int 21h
+    mov dl, 0
+    int 21h
+    
+    jmp InnerLoopRightExit
+    ;IF
+    FirstInnerUpLeftIFFF:
+    sub tempVar, bl ;n - i
+    inc tempVar ;+1
+    mov ah, 2
+    mov dl, tempVar
+    int 21h
+    mov dl, 0
+    int 21h
+
+    InnerLoopRightExit:
+    dec cl
+    cmp cl, 0
+    
+    jne InnerLoopRight
+    ret
 UpperSquareInnerRight endp
 
 
