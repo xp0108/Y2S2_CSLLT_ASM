@@ -54,59 +54,28 @@ EndM
 main proc  
 
 ;UPPER SQUARE -------------------------------------------------------------
-;     mov bl, 1 ;i=1, int i = 1
-;     OutterLoopUpper:
+    mov bl, 1 ;i=1, int i = 1
+    OutterLoopUpper:
 
-;     ;UPPER SQUARE _ INNER LEFT-------------------------------------
+    ;UPPER SQUARE _ INNER LEFT-------------------------------------
         
-;       ContinueProgramUpLeft:
-;             mov cl, 1 ;int j = 1
-;         InnerLoopLeft:  
-;       mov tempVar, 52 ;tempVar = n = 4
+    ContinueProgramUpLeft:
+    call UpperSquareInnerLeft
+        ;UPPER SQUARE _ INNER RIGHT-------------------------------------
+        ContinueProgramUpRight:
+           call UpperSquareInnerRight
 
-;         cmp bl, cl
-;         jl FirstIFFF
-;         ;ELSE
-;         SecondIFF:
-;         sub tempVar, cl ;n - j
-;         inc tempVar ;+1
-;         mov ah, 2
-;         mov dl, tempVar
-;         int 21h
-;         mov dl, 0
-;         int 21h
-        
-;         jmp InnerLoopLeftExit
-;         ;IF
-;         FirstIFFF:
-;         sub tempVar, bl ;n - i
-;         inc tempVar ;+1
-;         mov ah, 2
-;         mov dl, tempVar
-;         int 21h
-;         mov dl, 0
-;         int 21h
-
-;         InnerLoopLeftExit:
-;         inc cl
-;         cmp cl, 5
-;         je ContinueProgramUpRight
-;         jne InnerLoopLeft
-;         ;UPPER SQUARE _ INNER RIGHT-------------------------------------
-;         ContinueProgramUpRight:
-;            call UpperSquareInnerRight
-
-; ;-------------------------------------------------------------
-;     ExitOutterLoopUpeer:
+;-------------------------------------------------------------
+    ExitOutterLoopUpeer:
     
-;     mov ah,2
-;     mov dl,10
-;     int 21h
+    mov ah,2
+    mov dl,10
+    int 21h
 
-;     inc bl
-;     cmp bl, 5
-;     jne OutterLoopUpper
-; ;-------------------------------------------------------------
+    inc bl
+    cmp bl, 5
+    jne OutterLoopUpper
+;-------------------------------------------------------------
 
 ;LOWWER SQUARE--------------------------------------------------------------
     mov bl, 3 ;i=1, int i = 1
@@ -143,45 +112,12 @@ main proc
         InnerLoopLeftLowExit:
         inc cl
         cmp cl, 5
-        je InnerLoopRightLow ;ExitLowerLoopUpeer
         jne InnerLoopLeftLow
 ;-------------------------------------------------------------
 
         ;LOWWER SQUARE _ INNER RIGHT-------------------------------------
          ContinueProgramLowRight:
            call LowerSquareInnerRight
-        ; mov cl, 3 ;int j = 3 (n-1)
-        ; InnerLoopRightLow:
-        ; mov tempVar, 52 ;tempVar = n = 4
-
-        ; cmp bl, cl
-        ; jl FirstInnerDownRightIFFF
-        ; ;ELSE
-        ; SecondInnerDownRightIFF:
-        ; sub tempVar, cl ;n - j
-        ; inc tempVar ;+1
-        ; mov ah, 2
-        ; mov dl, tempVar
-        ; int 21h
-        ; mov dl, 0
-        ; int 21h
-        
-        ; jmp InnerLoopRightLowExit
-        ; ;IF
-        ; FirstInnerDownRightIFFF:
-        ; sub tempVar, bl ;n - i
-        ; inc tempVar ;+1
-        ; mov ah, 2
-        ; mov dl, tempVar
-        ; int 21h
-        ; mov dl, 0
-        ; int 21h
-
-        ; InnerLoopRightLowExit:
-        ; dec cl
-        ; cmp cl, 0
-        ; je ExitLowerLoopUpeer
-        ; jne InnerLoopRightLow
 ;-------------------------------------------------------------
     ExitLowerLoopUpeer:
     
@@ -200,87 +136,85 @@ SquaEnd:
 main endp
 
 UpperSquareInnerLeft PROC
-     ;UPPER SQUARE _ INNER RIGHT-------------------------------------
-    ;   mov cl, 1 ;int j = 1
-    ;     InnerLoopLeft:  
-    ;   mov tempVar, 52 ;tempVar = n = 4
+    mov cl, 1 ;int j = 1
+    InnerLoopLeft:  
+    mov tempVar, 52 ;tempVar = n = 4
 
-    ;     cmp bl, cl
-    ;     jl FirstIFFF
-    ;     ;ELSE
-    ;     SecondIFF:
-    ;     sub tempVar, cl ;n - j
-    ;     inc tempVar ;+1
-    ;     mov ah, 2
-    ;     mov dl, tempVar
-    ;     int 21h
-    ;     mov dl, 0
-    ;     int 21h
-        
-    ;     jmp InnerLoopLeftExit
-    ;     ;IF
-    ;     FirstIFFF:
-    ;     sub tempVar, bl ;n - i
-    ;     inc tempVar ;+1
-    ;     mov ah, 2
-    ;     mov dl, tempVar
-    ;     int 21h
-    ;     mov dl, 0
-    ;     int 21h
+    cmp bl, cl
+    jl FirstIFFF
+    ;ELSE
+    SecondIFF:
+    sub tempVar, cl ;n - j
+    inc tempVar ;+1
+    mov ah, 2
+    mov dl, tempVar
+    int 21h
+    mov dl, 0
+    int 21h
+    
+    jmp InnerLoopLeftExit
+    ;IF
+    FirstIFFF:
+    sub tempVar, bl ;n - i
+    inc tempVar ;+1
+    mov ah, 2
+    mov dl, tempVar
+    int 21h
+    mov dl, 0
+    int 21h
 
-    ;     InnerLoopLeftExit:
-    ;     inc cl
-    ;     cmp cl, 5
-    ;     je ContinueProgramUpRight
-    ;     jne InnerLoopLeft
+    InnerLoopLeftExit:
+    inc cl
+    cmp cl, 5
 
-    ; jmp ContinueProgramUpLeft
-    ; ret
+    jne InnerLoopLeft
+    jmp ContinueProgramUpLeft
+    ret
 UpperSquareInnerLeft endp
 
 UpperSquareInnerRight PROC
      ;UPPER SQUARE _ INNER RIGHT-------------------------------------
-    ;     mov cl, 3 ;int j = 3 (n-1)
-    ;     InnerLoopRight:
-    ;     mov tempVar, 52 ;tempVar = n = 4
+        mov cl, 3 ;int j = 3 (n-1)
+        InnerLoopRight:
+        mov tempVar, 52 ;tempVar = n = 4
 
-    ;     ;IF ELSE START
-    ;     cmp bl, cl
-    ;     jl FirstInnerUpLeftIFFF
-    ;     ;ELSE
-    ;     SecondInnerUpLeftIFF:
-    ;     sub tempVar, cl ;n - j
-    ;     inc tempVar ;+1
-    ;     mov ah, 2
-    ;     mov dl, tempVar
-    ;     int 21h
-    ;     mov dl, 0
-    ;     int 21h
+        ;IF ELSE START
+        cmp bl, cl
+        jl FirstInnerUpLeftIFFF
+        ;ELSE
+        SecondInnerUpLeftIFF:
+        sub tempVar, cl ;n - j
+        inc tempVar ;+1
+        mov ah, 2
+        mov dl, tempVar
+        int 21h
+        mov dl, 0
+        int 21h
         
-    ;     jmp InnerLoopRightExit
-    ;     ;IF
-    ;     FirstInnerUpLeftIFFF:
-    ;     sub tempVar, bl ;n - i
-    ;     inc tempVar ;+1
-    ;     mov ah, 2
-    ;     mov dl, tempVar
-    ;     int 21h
-    ;     mov dl, 0
-    ;     int 21h
+        jmp InnerLoopRightExit
+        ;IF
+        FirstInnerUpLeftIFFF:
+        sub tempVar, bl ;n - i
+        inc tempVar ;+1
+        mov ah, 2
+        mov dl, tempVar
+        int 21h
+        mov dl, 0
+        int 21h
 
-    ;     InnerLoopRightExit:
-    ;     dec cl
-    ;     cmp cl, 0
-    ;     je ExitOutterLoopUpeer
-    ;     jne InnerLoopRight
+        InnerLoopRightExit:
+        dec cl
+        cmp cl, 0
+       
+        jne InnerLoopRight
 
-    ; jmp ContinueProgramUpRight
-    ; ret
+    jmp ContinueProgramUpRight
+    ret
 
 UpperSquareInnerRight endp
 
 LowerSquareInnerRight PROC
-    ;LOWWER SQUARE _ INNER RIGHT-------------------------------------
+    ; LOWWER SQUARE _ INNER RIGHT-------------------------------------
         mov cl, 3 ;int j = 3 (n-1)
         InnerLoopRightLow:
         mov tempVar, 52 ;tempVar = n = 4
@@ -311,8 +245,9 @@ LowerSquareInnerRight PROC
         InnerLoopRightLowExit:
         dec cl
         cmp cl, 0
-        je ExitLowerLoopUpeer
+       
         jne InnerLoopRightLow
+        
         jmp ContinueProgramLowRight
     ret
 
