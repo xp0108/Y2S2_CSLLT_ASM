@@ -26,17 +26,17 @@
 .code 
 MacroDisMsg Macro msg
     lea dx, msg  
-    mov ah, 09h 
+    mov cl, 09h 
     int 21h  
 EndM
 
 MacroAcceptChar Macro
-    mov ah, 1           ;read a letter
+    mov cl, 1           ;read a letter
     int 21h 
     ; mov bl,al           ;move al to bl  
 EndM
 MacroClearScreen Macro colorVar
-    mov ah,6        ;clear screen
+    mov cl,6        ;clear screen
     mov al,0        ;Full Screen
     mov bh,colorVar ;4fh color
     mov cx,0        ;Starting Coordinates
@@ -44,7 +44,7 @@ MacroClearScreen Macro colorVar
     mov dh,24       ;Row
     int 10h
 
-    mov ah,2        ;Cursor being at 0,0
+    mov cl,2        ;Cursor being at 0,0
     mov bh,0
     mov dh,0        ;vertical
     mov dl,0        ;horizontal
@@ -53,40 +53,53 @@ EndM
 
 main proc  
 
-    mov ah, 2
-
-;------------------------------
-    mov cx, 4 ;row ,i=5,
-    mov bx, 4 ;j = column
-    ;num = tempVar
-    ;min = tempVar2/di
+    mov bl, 1 ;i=1, int i = 1
     OutterLoopUpper:
-;-------------------------------
-        push cx
-        mov cx, bx ;cx=1
         
-        mov dl,52
-        mov tempVar,dl ;ASCII                
-        ;loop row
-        InnerUpperLeft:   
-            cmp    cx, bx   ;bx1, cx4  
-            jl Less 
-            mov dl, 55 ;7 row
-            jmp Both            
-            Less: 
-            mov dl, 52 ;4 column
-            Both:
+    mov cl, 1 ;int j = 1
+        InnerLoop:
+        mov tempVar, 52 ;tempVar = n = 4
 
-            ;out of if else  
-            int 21h
-        loop InnerUpperLeft
-        pop cx  ;4
-;---------------------------
-        mov dl,10
+        cmp bl, cl
+        jl FirstIFFF
+        ;ELSE
+        SecondIFF:
+        sub tempVar, cl ;n - j
+        inc tempVar ;+1
+        mov ah, 2
+        mov dl, tempVar
         int 21h
-    loop OutterLoopUpper
-;-----------------------------
+        mov dl, 0
+        int 21h
+        
+        jmp InnerLoopExit
+        ;IF
+        FirstIFFF:
+        sub tempVar, bl ;n - i
+        inc tempVar ;+1
+        mov ah, 2
+        mov dl, tempVar
+        int 21h
+        mov dl, 0
+        int 21h
+
+        InnerLoopExit:
+        inc cl
+        cmp cl, 5
+        je ExitOutterLoopUpeer
+        jne InnerLoop
+
+    ExitOutterLoopUpeer:
+    
+    mov ah,2
+    mov dl,10
     int 21h
+
+    inc bl
+    cmp bl, 5
+    jne OutterLoopUpper
+    je SquaEnd
+
 
 SquaEnd:
     mov ah,4ch 

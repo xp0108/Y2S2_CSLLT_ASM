@@ -66,7 +66,7 @@ MAIN PROC
     mov ds,ax
     
     ClearScreen:
-        MacroClearScreen 04eh ;;4fh
+        MacroClearScreen 4fh ;04eh ;;4fh
     
     DisplayMenu:  
         MacroDisMsg menu     
