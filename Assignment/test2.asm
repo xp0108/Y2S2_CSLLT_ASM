@@ -76,22 +76,50 @@ MAIN PROC
     ClearScreen:
         MacroClearScreen 4fh ;04eh ;;4fh
     
-     
+;-------------------------------------
+        mov bl, 0
+        Row1Start:
         MacroDisMsg DesignRow15
 
-        Row15End:
+        inc bl
+        cmp bl, 5
+        jne Row1Start
+
         MacroDisMsg DesignRow15End
-
+;-------------------------------------
+        mov bl, 0
+        Row2Start:
         MacroDisMsg DesignRow24
+        inc bl
+        cmp bl, 5
+        jne Row2Start
         MacroDisMsg DesignRow24End
-
+;-------------------------------------
+        mov bl, 0
+        Row3Start:
         MacroDisMsg DesignRow3
+        inc bl
+        cmp bl, 5
+        jne Row3Start
         MacroDisMsg DesignRow3End
 
+;-------------------------------------
+        mov bl, 0
+        Row4Start:
         MacroDisMsg DesignRow24
+        inc bl
+        cmp bl, 5
+        jne Row4Start
         MacroDisMsg DesignRow24End
-
+;-------------------------------------
+        mov bl, 0
+        Row5Start:
         MacroDisMsg DesignRow15
+
+        inc bl
+        cmp bl, 5
+        jne Row5Start
+
         MacroDisMsg DesignRow15End
 
 
