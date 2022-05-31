@@ -65,9 +65,7 @@ main proc
 ;-----------INNER LOOP END--------------
     ExitUpperSquareOutter:
     
-    mov ah,2
-    mov dl,10
-    int 21h
+    MacroNewLine
 
     inc bl
     cmp bl, 5
@@ -86,9 +84,8 @@ main proc
     LSIR: call SquareInnerRight
     
     ExitLowerSquareOutter:
-    mov ah,2
-    mov dl,10
-    int 21h
+
+    MacroNewLine
 
     dec bl
     cmp bl, 0

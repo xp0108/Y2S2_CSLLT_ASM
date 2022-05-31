@@ -13,7 +13,7 @@
         
     invalidInputMsg db 10,10,"########## INVALID INPUT! ENTER AGAIN ##########",13,10,'$'
 
-    msg1 db "here is number patterns",10,10,'$' 
+    msg1 db "here is Number patterns",10,10,'$' 
     msg2 db "here is Design patterns",10,10,'$' 
     msg3 db "here is Box type patterns",10,10,'$'
     msg4 db "here is Nested loop patterns",10,10,'$'
@@ -271,78 +271,132 @@ NumberPattern endp
 DesignPattern PROC
     MacroClearScreen 04eh
     MacroDisMsg msg2
+
     jmp     ContinueProgram
     ret
 DesignPattern endp
 
 BoxTypePattern PROC
     MacroClearScreen 04eh
-    MacroDisMsg msg3
+    MacroDisMsg msg2
+
+        mov ah, 3
+;-------------------------
+;UPPER SQUARE
+    mov bl, 1 ;i=1, int i = 1
+    UpperSquareOutter:
+    ;UPPER SQUARE _ INNER LEFT
+    USIL: call SquareInnerLeft
+
+    ;UPPER SQUARE _ INNER RIGHT
+    USIR: call SquareInnerRight
+
+;-----------INNER LOOP END--------------
+    ExitUpperSquareOutter:
+    
     MacroNewLine
-       
-;Saving in ‘a’
-mov ah,2
 
-mov tempVar,"6"
-sub tempVar,48    ;start cursor with 0 
-mov cl,tempVar
-;For Next Line
-MacroNewLine
+    inc bl
+    cmp bl, 5
+    jne UpperSquareOutter
 
-;For Line of *
-;mov cx,5
-aa: ;first line 
-mov dx,'A' ;'*'
-int 21h
-mov dx," "
-int 21h
-loop aa
+;---------UPPER SQUARE END----------------
 
-;For * * Line
-mov cl,tempVar
-sub cl,2
-label1:
-mov bx,cx
+;-------------------------
+;LOWER SQUARE
+    mov bl, 3 ;i=1, int i = 1
+    LowerSquareOutter:
+    ;LOWER SQUARE _ INNER LEFT
+    LSIL: call SquareInnerLeft
 
-;For Next Line
-MacroNewLine
+    ;LOWER SQUARE _ INNER RIGHT
+    LSIR: call SquareInnerRight
+    
+    ExitLowerSquareOutter:
 
-;First Left column 
-mov dx,'A' ;'*'
-int 21h
+    MacroNewLine
 
-mov cl,tempVar
-sub cl,2
-label2:
-mov dx,' '
-int 21h
-int 21h ;mody - space for column
+    dec bl
+    cmp bl, 0
+    jne LowerSquareOutter
+;-------------------------
 
-loop label2
-mov dx,' '  ;mody
-int 21h
-
-mov dx,'A' ;'*'
-int 21h
-
-mov cx,bx
-loop label1
-
-;For Next Line
-MacroNewLine
-
-mov cl,tempVar
-label4:
-mov dx,'A' ;'*'
-int 21h
-mov dx," "
-int 21h
-loop label4
-
-
-    jmp ContinueProgram
+    jmp     ContinueProgram
     ret
 BoxTypePattern endp
+
+SquareInnerLeft PROC
+    mov cl, 1 ;int j = 1
+    InnerLoopLeft:  
+    mov tempVar, 52 ;tempVar = n = 4
+
+    cmp bl, cl
+    jl FirstIFFF
+    ;ELSE
+    SecondIFF:
+    sub tempVar, cl ;n - j
+    inc tempVar ;+1
+    mov ah, 2
+    mov dl, tempVar
+    int 21h
+    mov dl, 0
+    int 21h
+    
+    jmp InnerLoopLeftExit
+    ;IF
+    FirstIFFF:
+    sub tempVar, bl ;n - i
+    inc tempVar ;+1
+    mov ah, 2
+    mov dl, tempVar
+    int 21h
+    mov dl, 0
+    int 21h
+
+    InnerLoopLeftExit:
+    inc cl
+    cmp cl, 5
+    jne InnerLoopLeft
+
+    ret
+SquareInnerLeft endp
+
+SquareInnerRight PROC
+    mov cl, 3 ;int j = 3 (n-1)
+    InnerLoopRight:
+    mov tempVar, 52 ;tempVar = n = 4
+
+    ;IF ELSE START
+    cmp bl, cl
+    jl FirstInnerUpLeftIFFF
+    ;ELSE
+    SecondInnerUpLeftIFF:
+    sub tempVar, cl ;n - j
+    inc tempVar ;+1
+    mov ah, 2
+    mov dl, tempVar
+    int 21h
+    mov dl, 0
+    int 21h
+    
+    jmp InnerLoopRightExit
+    ;IF
+    FirstInnerUpLeftIFFF:
+    sub tempVar, bl ;n - i
+    inc tempVar ;+1
+    mov ah, 2
+    mov dl, tempVar
+    int 21h
+    mov dl, 0
+    int 21h
+
+    InnerLoopRightExit:
+    dec cl
+    cmp cl, 0
+    
+    jne InnerLoopRight
+    ret
+SquareInnerRight endp
 
 NestedLoopPattern PROC
     NestedLoopStart: 
