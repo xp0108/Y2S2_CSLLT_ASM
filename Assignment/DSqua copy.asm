@@ -24,6 +24,12 @@
     tempVar db ?
     tempVar2 db ?
 .code 
+
+MacroNewLine Macro 
+    mov dl,10
+    int 21h
+endM
+
 MacroDisMsg Macro msg
     lea dx, msg  
     mov ah, 09h 
