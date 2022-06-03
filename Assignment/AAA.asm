@@ -566,6 +566,8 @@ NLoop PROC
     jg LoopInvalid
     sub di, 48      ;move ASCII
 
+    clearScreenDefineColor 74h
+
 ;TOP LEFT------------------------------------------------------------
     mov dh,1 ;row
     mov dl,0 ;col
