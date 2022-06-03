@@ -79,7 +79,7 @@ MAIN PROC
         MacroAcceptChar
 
             mov bl, al
-            sub bl, 48
+            sub bl, 48 ;convert "3" to 3
             mov ah,2
         MacroNewLine
            
