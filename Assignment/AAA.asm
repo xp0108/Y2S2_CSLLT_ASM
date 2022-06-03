@@ -26,8 +26,10 @@
     pInvalid db 10,"Invalid Input", 13, 10,10, "$"
 
     tempVar db ?
+    tempColor db ?
     diamondInput db "How many row you wanted to display [3~9]? $"
     dnaInput db "How many row you wanted to display [1~9]? $"
+    loopInput db "How many row you wanted to display [3~9]? $"
 
     DNARow1&5 db "X   X$"
     DNARow2&4 db " X X $"
@@ -533,7 +535,142 @@ BoxInnerRight PROC
 BoxInnerRight endp
 
 NLoop PROC
+
+    ;if invalid input 
+    jmp LoopStart ;skip invalid input first
+    LoopInvalid:
+    
+    ;print new line
+    newLine
+    
+    ;print invalid
+    mov ah, 09h
+    mov dx, offset pInvalid
+    int 21h
+    jmp LoopStart
+
     printDesAndExit pLoop
+    LoopStart:
+    printDesAndExit loopInput
+
+    ;accept input
+    mov ah, 1 
+    int 21h 
+    ;convert input into ASCII
+    cbw
+    mov  di, ax
+    cmp di, '3'
+    jl LoopInvalid
+
+    cmp di, '9'
+    jg LoopInvalid
+    sub di, 48      ;move ASCII
+
+;TOP LEFT------------------------------------------------------------
+    mov dh,1 ;row
+    mov dl,0 ;col
+    mov cx,di
+    StartTopLeft:
+        push cx
+        StartTopLeftPrint:
+            mov tempColor, 4fh ;define color
+            mov bl,tempColor
+            mov al, '*'
+            mov ah, 2     ;cursor start at 0
+            int 10h
+            mov ah, 9     ; print horizontal
+            int 10h
+        loop StartTopLeftPrint
+
+        inc dh
+        pop cx
+    loop StartTopLeft
+
+;TOP RIGHT------------------------------------------------------------
+
+    mov dh,1 ;row
+    mov dl,18 ;col
+    mov cx,di ;row count
+    mov si,1
+    StartTopRight:
+        push cx 
+            mov cx, si ;cx=1
+            StartTopRightPrint:
+                mov tempColor, 4ch ;define color
+                mov bl,tempColor
+                mov al,42
+                mov ah, 2     ;cursor start at 0
+                int 10h
+                mov ah, 9     ; print horizontal
+                int 10h
+            loop StartTopRightPrint
+        inc si ;bx+1=2
+        
+        inc dh  ;nextline
+        pop cx  ;4
+    loop StartTopRight
+
+;BOTTOM LEFT-------------------------------------------------------
+
+    mov dh,14    ;row
+    mov dl,0    ;column
+    mov cx,di ;row ,i=5
+    mov si, 1 ;j = column
+    ;num = tempVar
+    NumberBottomLeft:
+
+        push cx
+        mov cx, si ;cx=1
+        mov tempColor, 4ch ;define color
+        mov bl,tempColor
+        mov al, "1"
+    
+        mov tempVar,al
+
+        NumberBottomLeftPrint:   
+            mov al, tempVar                 
+            mov bh, 0
+            mov ah, 2 ;set cursor position
+            int 10h
+            mov ah, 09h ;display chara
+            int 10h     ;call BIOS
+            inc al
+            mov tempVar,al
+        loop NumberBottomLeftPrint
+        
+        inc si ;bx+1=2
+        
+        pop cx  ;4
+
+        inc dh ;inc row
+    loop NumberBottomLeft
+
+;BOTTOM RIGHT-----------------------------------------
+    mov dh,14    ;row
+    mov dl,18    ;column
+    mov cx,di ;row count ,i=5
+    NumberBottomRight:
+
+        push cx
+        mov tempColor, 4fh ;define color
+        mov bl,tempColor
+        mov al,"1"
+        mov tempVar,al
+        NumberBottomRightPrint:   
+            mov al, tempVar                 
+            mov bh, 0
+            mov ah, 2 ;set cursor position
+            int 10h
+            mov ah, 09h ;display chara
+            int 10h     ;call BIOS
+            inc al
+            mov tempVar,al
+        loop NumberBottomRightPrint
+        pop cx  ;4
+
+        inc dh  ;new row/newline
+    loop NumberBottomRight
+    
     jmp exit
     ret
 NLoop endp
