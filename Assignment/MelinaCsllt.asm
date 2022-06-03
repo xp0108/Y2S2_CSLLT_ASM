@@ -24,7 +24,7 @@
     pBox db 10,"Box type pattern is selected", 13, 10,10, "$"
     pLoop db 10,"Nested Loop pattern is selected", 13, 10,10, "$"
     pInvalid db 10,"Invalid Input", 13, 10,10, "$"
-    pTest db "Test complete", 13, 10, "$" ;for testing only
+
     tempVar db ?
     diamondInput db "How many row you wanted to display [3~9]? $"
 .code
@@ -104,7 +104,7 @@ selectDiamond:
     ;new line
     newLine
     
-    ;print message
+    ;jump to Process, run function
     clearScreenDefineColor 74h
     jmp diamondP
 ;=====================================================
@@ -115,10 +115,9 @@ selectDNA:
     ;new line
     newLine
     
-    ;print message
+    ;jump to Process, run function
     clearScreenDefineColor 74h
-    ; printDesAndExit pDNA
-    jmp diamondP
+    jmp dnaP
 
 ;=====================================================
 ; BOX SHAPE
@@ -128,10 +127,9 @@ selectBox:
     ;new line
     newLine
     
-    ;print message
+    ;jump to Process, run function
     clearScreenDefineColor 74h
-    ; printDesAndExit pBox
-    jmp diamondP
+    jmp boxP
 ;=====================================================
 ; NESTED LOOP SHAPE
 ;=====================================================
@@ -140,10 +138,9 @@ selectNestedLoop:
     ;new line
     newLine
     
-    ;print message
+    ;jump to Process, run function
     clearScreenDefineColor 74h
-    ; printDesAndExit pLoop
-    jmp diamondP
+    jmp loopP
 ;==================SHAPE CODE END======================
 
 selectInvalid:
@@ -164,6 +161,9 @@ exit:
 Main endp
 
     diamondP: call Diamond
+    dnaP: call DNA
+    boxP: call Box
+    loopP: call NLoop
 
 ;=====================================================
 ; PROCESS
@@ -308,6 +308,28 @@ ReturnBack:
     jmp exit
     ret
 Diamond endp
+
+Diamond PROC
+
+DNA:
+    printDesAndExit pDNA
+    jmp exit
+    ret
+DNA endp
+
+Box:
+    printDesAndExit pBox
+    jmp exit
+    ret
+Box endp
+
+NLoop:
+    printDesAndExit pLoop
+    jmp exit
+    ret
+NLoop endp
+
+
 end main
 
 
