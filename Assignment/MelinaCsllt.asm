@@ -100,8 +100,7 @@ printMenu:
 ; DIAMOND SHAPE
 ;=====================================================
 selectDiamond:
-    
-    ;new line
+
     newLine
     
     ;jump to Process, run function
@@ -111,8 +110,7 @@ selectDiamond:
 ; DNA SHAPE
 ;=====================================================
 selectDNA:
-    
-    ;new line
+
     newLine
     
     ;jump to Process, run function
@@ -123,8 +121,7 @@ selectDNA:
 ; BOX SHAPE
 ;=====================================================
 selectBox:
-    
-    ;new line
+
     newLine
     
     ;jump to Process, run function
@@ -134,8 +131,7 @@ selectBox:
 ; NESTED LOOP SHAPE
 ;=====================================================
 selectNestedLoop:
-    
-    ;new line
+
     newLine
     
     ;jump to Process, run function
@@ -167,13 +163,26 @@ Main endp
     loopP: call NLoop
 
 ;=====================================================
-; PROCESS
+; PROCESS - PATTERN CODE
 ;=====================================================
 
 Diamond PROC
+    ;if invalid input 
+    jmp DiamondStart ;skip invalid input first
+    DiamondInvalid:
+    
+    ;print new line
+    newLine
+    
+    ;print invalid
+    mov ah, 09h
+    mov dx, offset pInvalid
+    int 21h
+    jmp DiamondStart
+
     printDesAndExit pDiamond
-    printDesAndExit diamondInput
     DiamondStart:
+    printDesAndExit diamondInput
 
     ;accept input
     mov ah, 1 
@@ -182,10 +191,10 @@ Diamond PROC
     cbw
     mov  di, ax
     cmp di, '3'
-    jl DiamondStart
+    jl DiamondInvalid
 
     cmp di, '9'
-    jg DiamondStart
+    jg DiamondInvalid
     sub di, 48      ;move ASCII
 
 ;=======================Up Triangle======================
@@ -193,93 +202,93 @@ Diamond PROC
     mov ah, 2
     newLine
 
-    mov cx,di ;8 ;num=8
+    mov cx,di 
     mov bx, 1 ;j = column
     ;num = tempVar
-    OuterUpDiamonLoop:
+    UpTriangleLoop1:
         
         push cx ;initial = input ; inner loop
 
-        UpSpaceTri:   
-            mov dl, 0             
+        UpTriangleSpace:   
+            mov dl, " "             
             int 21h
             int 21h
-        loop UpSpaceTri
+        loop UpTriangleSpace
     pop cx
 ;-------------------------------------------------------
     push cx
         mov cx, bx ;bx= cx =1
 
-        mov dl,49   ;Ascii 1 ; num = 1
+        mov dl,"1" 
         mov tempVar,dl
-        UpAscTri:
+        UpTriangleLeft:
             mov dl, tempVar  ;move tempVar to dl 
             int 21h          ;print
             inc dl           ;dl+1
             
             mov tempVar,dl  ;move dl to tempVar (dl = tempVar)         
-            mov dl, 0   ;dl use to print, Ascii 0 = space      
+            mov dl, " "        
             int 21h     ;print 
-        loop UpAscTri
+        loop UpTriangleLeft
         inc bx  ;bx+1=2
     pop cx
 ;--------------------------------------------------------------
-    push cx     ;8
+    push cx     
     push bx     ;2
     cmp bx, 2
-    je DiamondUp
+    je UpTriangleEnd
         dec bx  ;2-1
         mov cx, bx ;bx=1,cx=1
         dec cx 
         dec tempVar
-        UpDecTri:
+        UpTriangleRight:
             dec tempVar  ;move tempVar to dl 
             mov dl, tempVar
             int 21h          ;print
             
             mov tempVar,dl  ;move dl to tempVar (dl = tempVar)         
-            mov dl, 0   ;dl use to print, Ascii 0 = space      
+            mov dl, " "   ;dl use to print, Ascii 0 = space      
             int 21h     ;print 
-        loop UpDecTri
+        loop UpTriangleRight
     pop bx
     pop cx
 
-    DiamondUp:
+    UpTriangleEnd:
         newLine
-        loop OuterUpDiamonLoop
+        loop UpTriangleLoop1
 ;=======================Down Triangle======================
     mov ah, 2
     dec di
-    mov cx,di ;num=7 , have to dec 1
+    mov cx,di ;have to dec 1
     mov bx, 1 ;j = column
-    OuterDownDiamonLoop:
-    mov dl,0            
+    DownTriangleLoop1:
+    mov dl," "            
     int 21h
     int 21h
         push cx
         mov cx, bx ;cx=1
 
-        DownSpaceTri:   
-            mov dl,0            
+        DownTriangleSpace:   
+            mov dl," "            
             int 21h
             int 21h
-        loop DownSpaceTri
+        loop DownTriangleSpace
         pop cx 
     
     inc bx 
 ;-------------------------------------------------------
     push cx
-        mov dl,49   ;Ascii 1 ; num = 1
+        mov dl,"1"   ;Ascii 1 ; num = 1
         mov tempVar,dl
-        DownAscTri:
+        DownTriangleLeft:
             mov dl, tempVar  ;move tempVar to dl 
             int 21h          ;print
             inc dl           ;dl+1
             
             mov tempVar,dl  ;move dl to tempVar (dl = tempVar)         
-            mov dl, 0   ;dl use to print, Ascii 0 = space      
+            mov dl, " "   ;dl use to print, Ascii 0 = space      
             int 21h     ;print 
-        loop DownAscTri
+        loop DownTriangleLeft
     pop cx
 ;--------------------------------------------------------------
     push cx     ;8
@@ -289,22 +298,22 @@ Diamond PROC
         ; dec bx  ;2-1
         ; mov cx, bx ;bx=1,cx=1
         dec tempVar
-        DownDecTri:
+        DownTriangleRight:
             dec tempVar  ;move tempVar to dl 
             mov dl, tempVar
             int 21h          ;print
             
             mov tempVar,dl  ;move dl to tempVar (dl = tempVar)         
-            mov dl, 0   ;dl use to print, Ascii 0 = space      
+            mov dl, " "   ;dl use to print, Ascii 0 = space      
             int 21h     ;print 
-        loop DownDecTri
+        loop DownTriangleRight
     pop cx
 
 
-    DiamondDown:
+    DownTriangleEnd:
     newLine
-    loop OuterDownDiamonLoop
-
+    loop DownTriangleLoop1
+    
 ReturnBack:
     jmp exit
     ret
