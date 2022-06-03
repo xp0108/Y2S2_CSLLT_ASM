@@ -327,9 +327,125 @@ DNA endp
 
 Box PROC
     printDesAndExit pBox
+
+    ;UPPER BOX
+    mov bl, 1 ;i=1, int i = 1
+    UpperBoxOutter:
+    ;UPPER BOX _ INNER LEFT
+    USIL: call BoxInnerLeft
+
+    ;UPPER BOX _ INNER RIGHT
+    USIR: call BoxInnerRight
+
+;-----------INNER LOOP END--------------
+    ExitUpperBoxOutter:
+    
+    mov ah,2
+    mov dl,10
+    int 21h
+
+    inc bl
+    cmp bl, 6;5
+    jne UpperBoxOutter
+
+;---------UPPER BOX END----------------
+
+;-------------------------
+;LOWER BOX
+    mov bl, 4;3 ;i=1, int i = 1
+    LowerBoxOutter:
+    ;LOWER BOX _ INNER LEFT
+    LSIL: call BoxInnerLeft
+
+    ;LOWER BOX _ INNER RIGHT
+    LSIR: call BoxInnerRight
+    
+    ExitLowerBoxOutter:
+    mov ah,2
+    mov dl,10
+    int 21h
+
+    dec bl
+    cmp bl, 0
+    jne LowerBoxOutter
+;-------------------------
+
     jmp exit
     ret
 Box endp
+BoxInnerLeft PROC
+    mov cl, 1 ;int j = 1
+    InnerLoopLeft:  
+    mov tempVar, "E" ;tempVar = n = 4
+
+    cmp bl, cl
+    jl FirstIFFF
+    ;ELSE
+    SecondIFF:
+    sub tempVar, cl ;n - j
+    inc tempVar ;+1
+    mov ah, 2
+    mov dl, tempVar
+    int 21h
+    mov dl, 0
+    int 21h
+    
+    jmp InnerLoopLeftExit
+    ;IF
+    FirstIFFF:
+    sub tempVar, bl ;n - i
+    inc tempVar ;+1
+    mov ah, 2
+    mov dl, tempVar
+    int 21h
+    mov dl, 0
+    int 21h
+
+    InnerLoopLeftExit:
+    inc cl
+    cmp cl, 6 ;n+1
+    jne InnerLoopLeft
+
+    ret
+BoxInnerLeft endp
+
+
+BoxInnerRight PROC
+    mov cl, 4 ;int j = 3 (n-1)
+    InnerLoopRight:
+    mov tempVar, "E" ;tempVar = n = 4
+
+    ;IF ELSE START
+    cmp bl, cl
+    jl FirstInnerUpLeftIFFF
+    ;ELSE
+    SecondInnerUpLeftIFF:
+    sub tempVar, cl ;n - j
+    inc tempVar ;+1
+    mov ah, 2
+    mov dl, tempVar
+    int 21h
+    mov dl, 0
+    int 21h
+    
+    jmp InnerLoopRightExit
+    ;IF
+    FirstInnerUpLeftIFFF:
+    sub tempVar, bl ;n - i
+    inc tempVar ;+1
+    mov ah, 2
+    mov dl, tempVar
+    int 21h
+    mov dl, 0
+    int 21h
+
+    InnerLoopRightExit:
+    dec cl
+    cmp cl, 0
+    
+    jne InnerLoopRight
+    ret
+BoxInnerRight endp
 
 NLoop PROC
     printDesAndExit pLoop
