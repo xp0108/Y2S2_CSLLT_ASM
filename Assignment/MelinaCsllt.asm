@@ -26,6 +26,7 @@
     pInvalid db 10,"Invalid Input", 13, 10,10, "$"
     pTest db "Test complete", 13, 10, "$" ;for testing only
     tempVar db ?
+    diamondInput db "How many row you wanted to display [3~9]? $"
 .code
 
 newLine Macro
@@ -54,7 +55,6 @@ printDesAndExit Macro des
     mov dx, offset des
     mov ah, 09h
     int 21h
-    jmp exit
 EndM
 
 Main proc
@@ -106,8 +106,7 @@ selectDiamond:
     
     ;print message
     clearScreenDefineColor 74h
-    printDesAndExit pDiamond
-
+    jmp diamondP
 ;=====================================================
 ; DNA SHAPE
 ;=====================================================
@@ -118,7 +117,8 @@ selectDNA:
     
     ;print message
     clearScreenDefineColor 74h
-    printDesAndExit pDNA
+    ; printDesAndExit pDNA
+    jmp diamondP
 
 ;=====================================================
 ; BOX SHAPE
@@ -130,7 +130,8 @@ selectBox:
     
     ;print message
     clearScreenDefineColor 74h
-    printDesAndExit pBox
+    ; printDesAndExit pBox
+    jmp diamondP
 ;=====================================================
 ; NESTED LOOP SHAPE
 ;=====================================================
@@ -141,7 +142,8 @@ selectNestedLoop:
     
     ;print message
     clearScreenDefineColor 74h
-    printDesAndExit pLoop
+    ; printDesAndExit pLoop
+    jmp diamondP
 ;==================SHAPE CODE END======================
 
 selectInvalid:
@@ -161,6 +163,151 @@ exit:
     
 Main endp
 
+    diamondP: call Diamond
+
+;=====================================================
+; PROCESS
+;=====================================================
+
+Diamond PROC
+    printDesAndExit pDiamond
+    printDesAndExit diamondInput
+    DiamondStart:
+
+    ;accept input
+    mov ah, 1 
+    int 21h 
+    ;convert input into ASCII
+    cbw
+    mov  di, ax
+    cmp di, '3'
+    jl DiamondStart
+
+    cmp di, '9'
+    jg DiamondStart
+    sub di, 48      ;move ASCII
+
+;=======================Up Triangle======================
+
+    mov ah, 2
+    newLine
+
+    mov cx,di ;8 ;num=8
+    mov bx, 1 ;j = column
+    ;num = tempVar
+    OuterUpDiamonLoop:
+        
+        push cx ;initial = input ; inner loop
+
+        UpSpaceTri:   
+            mov dl, 0             
+            int 21h
+            int 21h
+        loop UpSpaceTri
+    pop cx
+;-------------------------------------------------------
+    push cx
+        mov cx, bx ;bx= cx =1
+
+        mov dl,49   ;Ascii 1 ; num = 1
+        mov tempVar,dl
+        UpAscTri:
+            mov dl, tempVar  ;move tempVar to dl 
+            int 21h          ;print
+            inc dl           ;dl+1
+            
+            mov tempVar,dl  ;move dl to tempVar (dl = tempVar)         
+            mov dl, 0   ;dl use to print, Ascii 0 = space      
+            int 21h     ;print 
+        loop UpAscTri
+        inc bx  ;bx+1=2
+    pop cx
+;--------------------------------------------------------------
+    push cx     ;8
+    push bx     ;2
+    cmp bx, 2
+    je DiamondUp
+        dec bx  ;2-1
+        mov cx, bx ;bx=1,cx=1
+        dec cx 
+        dec tempVar
+        UpDecTri:
+            dec tempVar  ;move tempVar to dl 
+            mov dl, tempVar
+            int 21h          ;print
+            
+            mov tempVar,dl  ;move dl to tempVar (dl = tempVar)         
+            mov dl, 0   ;dl use to print, Ascii 0 = space      
+            int 21h     ;print 
+        loop UpDecTri
+    pop bx
+    pop cx
+
+    DiamondUp:
+        newLine
+        loop OuterUpDiamonLoop
+;=======================Down Triangle======================
+    mov ah, 2
+    dec di
+    mov cx,di ;num=7 , have to dec 1
+    mov bx, 1 ;j = column
+    OuterDownDiamonLoop:
+    mov dl,0            
+    int 21h
+    int 21h
+        push cx
+        mov cx, bx ;cx=1
+
+        DownSpaceTri:   
+            mov dl,0            
+            int 21h
+            int 21h
+        loop DownSpaceTri
+        pop cx 
+    
+    inc bx 
+;-------------------------------------------------------
+    push cx
+        mov dl,49   ;Ascii 1 ; num = 1
+        mov tempVar,dl
+        DownAscTri:
+            mov dl, tempVar  ;move tempVar to dl 
+            int 21h          ;print
+            inc dl           ;dl+1
+            
+            mov tempVar,dl  ;move dl to tempVar (dl = tempVar)         
+            mov dl, 0   ;dl use to print, Ascii 0 = space      
+            int 21h     ;print 
+        loop DownAscTri
+    pop cx
+;--------------------------------------------------------------
+    push cx     ;8
+    dec cx
+    cmp cx,1
+    jl ReturnBack
+        ; dec bx  ;2-1
+        ; mov cx, bx ;bx=1,cx=1
+        dec tempVar
+        DownDecTri:
+            dec tempVar  ;move tempVar to dl 
+            mov dl, tempVar
+            int 21h          ;print
+            
+            mov tempVar,dl  ;move dl to tempVar (dl = tempVar)         
+            mov dl, 0   ;dl use to print, Ascii 0 = space      
+            int 21h     ;print 
+        loop DownDecTri
+    pop cx
+
+
+    DiamondDown:
+    newLine
+    loop OuterDownDiamonLoop
+
+ReturnBack:
+    jmp exit
+    ret
+Diamond endp
 end main
 
 

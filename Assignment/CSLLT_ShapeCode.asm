@@ -23,8 +23,8 @@
     tempVar db ?
     colour db ?
 
-    displayNestedNoPttrn db "How many row you wanted to display [4~9]? $"
-    displayNumberNoPttrn db "How many row you wanted to display [3~9]? $"
+    displayNestedNoPttrn db "Row To Display [4~9]: $"
+    displayNumberNoPttrn db "Row To Display [3~9]: $"
 .code
 
 ;MACRO FUNCTION 
