@@ -13,9 +13,6 @@ MAIN proc
      mov ax, @data 
     mov ds, ax
 
-    mov ah,09h
-    mov dx, offset menu
-    int 21h 
 
     mov ah, 1
     int 21h 
