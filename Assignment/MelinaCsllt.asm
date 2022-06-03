@@ -160,6 +160,7 @@ exit:
     
 Main endp
 
+    ;call the function in Process
     diamondP: call Diamond
     dnaP: call DNA
     boxP: call Box
