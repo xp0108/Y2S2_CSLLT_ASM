@@ -75,14 +75,18 @@ MAIN PROC
 
     ClearScreen:
         MacroClearScreen 4fh ;04eh ;;4fh
-    
+        
+        MacroAcceptChar
+        mov tempVar, al
+        mov ah,2
+        MacroNewLine
 ;-------------------------------------
         mov bl, 0
         Row1Start:
         MacroDisMsg DesignRow15
 
         inc bl
-        cmp bl, 5
+        cmp bl, tempVar
         jne Row1Start
 
         MacroDisMsg DesignRow15End
