@@ -310,21 +310,19 @@ ReturnBack:
     ret
 Diamond endp
 
-Diamond PROC
-
-DNA:
+DNA PROC
     printDesAndExit pDNA
     jmp exit
     ret
 DNA endp
 
-Box:
+Box PROC
     printDesAndExit pBox
     jmp exit
     ret
 Box endp
 
-NLoop:
+NLoop PROC
     printDesAndExit pLoop
     jmp exit
     ret
