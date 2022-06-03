@@ -27,6 +27,16 @@
 
     tempVar db ?
     diamondInput db "How many row you wanted to display [3~9]? $"
+    dnaInput db "How many row you wanted to display [1~9]? $"
+
+    DNARow1&5 db "X   X$"
+    DNARow2&4 db " X X $"
+    DNARow3 db "  X  $"
+
+    DNARow1&5End db "X",10,'$'
+    DNARow2&4End db " X",10,'$'
+    DNARow3End  db "  X",10,'$'
+
 .code
 
 newLine Macro
@@ -320,7 +330,84 @@ ReturnBack:
 Diamond endp
 
 DNA PROC
+    ;if invalid input 
+    jmp DNAStart ;skip invalid input first
+    DNAInvalid:
+    
+    ;print new line
+    newLine
+    
+    ;print invalid
+    mov ah, 09h
+    mov dx, offset pInvalid
+    int 21h
+    jmp DNAStart
+
     printDesAndExit pDNA
+    DNAStart:
+    printDesAndExit dnaInput
+    ;accept input
+    mov ah, 1   
+    int 21h
+    mov bl, al
+
+    cmp bl, '1'
+    jl DNAInvalid
+
+    cmp bl, '9'
+    jg DNAInvalid
+    ;convert input into ASCII
+    sub bl, 48
+    
+    mov ah,2
+    newLine
+        
+;-------------------------------------
+    mov cl, 0
+    Row1Start:
+    printDesAndExit DNARow1&5
+
+    inc cl
+    cmp cl, bl
+    jne Row1Start
+
+    printDesAndExit DNARow1&5End
+;-------------------------------------
+    mov cl, 0
+    Row2Start:
+    printDesAndExit DNARow2&4
+    inc cl
+    cmp cl, bl
+    jne Row2Start
+    printDesAndExit DNARow2&4End
+;-------------------------------------
+    mov cl, 0
+    Row3Start:
+    printDesAndExit DNARow3
+    inc cl
+    cmp cl, bl
+    jne Row3Start
+    printDesAndExit DNARow3End
+
+;-------------------------------------
+    mov cl, 0
+    Row4Start:
+    printDesAndExit DNARow2&4
+    inc cl
+    cmp cl, bl
+    jne Row4Start
+    printDesAndExit DNARow2&4End
+;-------------------------------------
+    mov cl, 0
+    Row5Start:
+    printDesAndExit DNARow1&5
+
+    inc cl
+    cmp cl, bl
+    jne Row5Start
+
+    printDesAndExit DNARow1&5End
+
     jmp exit
     ret
 DNA endp
@@ -408,8 +495,6 @@ BoxInnerLeft PROC
 
     ret
 BoxInnerLeft endp
-
-
 BoxInnerRight PROC
     mov cl, 4 ;int j = 3 (n-1)
     InnerLoopRight:
