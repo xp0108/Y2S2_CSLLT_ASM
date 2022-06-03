@@ -77,51 +77,54 @@ MAIN PROC
         MacroClearScreen 4fh ;04eh ;;4fh
         
         MacroAcceptChar
-        mov ah,2
+
+            mov bl, al
+            sub bl, 48
+            mov ah,2
         MacroNewLine
-        mov tempVar, al
+           
 ;-------------------------------------
-        mov bl, 0
+        mov cl, 0
         Row1Start:
         MacroDisMsg DesignRow15
 
-        inc bl
-        cmp bl, tempVar
+        inc cl
+        cmp cl, bl
         jne Row1Start
 
         MacroDisMsg DesignRow15End
 ;-------------------------------------
-        mov bl, 0
+        mov cl, 0
         Row2Start:
         MacroDisMsg DesignRow24
-        inc bl
-        cmp bl, 5
+        inc cl
+        cmp cl, bl
         jne Row2Start
         MacroDisMsg DesignRow24End
 ;-------------------------------------
-        mov bl, 0
+        mov cl, 0
         Row3Start:
         MacroDisMsg DesignRow3
-        inc bl
-        cmp bl, 5
+        inc cl
+        cmp cl, bl
         jne Row3Start
         MacroDisMsg DesignRow3End
 
 ;-------------------------------------
-        mov bl, 0
+        mov cl, 0
         Row4Start:
         MacroDisMsg DesignRow24
-        inc bl
-        cmp bl, 5
+        inc cl
+        cmp cl, bl
         jne Row4Start
         MacroDisMsg DesignRow24End
 ;-------------------------------------
-        mov bl, 0
+        mov cl, 0
         Row5Start:
         MacroDisMsg DesignRow15
 
-        inc bl
-        cmp bl, 5
+        inc cl
+        cmp cl, bl
         jne Row5Start
 
         MacroDisMsg DesignRow15End
