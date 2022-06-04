@@ -29,12 +29,22 @@
     tempVar db ?
     colour db ?
 
-    displayNestedNoPttrn db "Row To Display [4~9]: $"
-    displayNumberNoPttrn db "Row To Display [3~9]: $"
-    displayDesignNoPttrn db "Row To Display [1~9]: $"
+    displayNestedNoPttrn db "Row To Display [4 - 9]: $"
+    displayNumberNoPttrn db "Row To Display [3 - 9]: $"
+    displayDesignNoPttrn db "Diamond To Display [1 - 9]: $"
+
+    DesignPatternRow15 db 35,0,0,0,35,"$"
+    DesignPatternRow24 db 0,35,0,35,0,"$"
+    DesignPatternRow3 db 0,0,35,0,0,"$"
+
+    DesignPatternRow15End db 35,,10,'$'
+    DesignPatternRow24End db 0,35,10,'$'
+    DesignPatternRow3End  db 0,0,35,10,'$'
 .code
 
-;MACRO FUNCTION 
+;=======================================================
+;                   MACRO FUNCTION
+;=======================================================
 MacroNewLine Macro 
     mov dl,10
     int 21h
@@ -47,9 +57,8 @@ MacroDisMsg Macro msg
 EndM
 
 MacroAcceptChar Macro
-    mov ah, 1           ;read a letter
+    mov ah, 1       ;read a letter
     int 21h 
-    ; mov bl,al           ;move al to bl  
 EndM
 
 MacroClearScreen Macro colorVar
@@ -67,7 +76,9 @@ MacroClearScreen Macro colorVar
     mov dl,0        ;horizontal
     int 10h
 EndM
-
+;=======================================================
+;                   PROGRAM START
+;=======================================================
 MAIN PROC 
     mov ax,@data
     mov ds,ax
@@ -75,13 +86,13 @@ MAIN PROC
     ClearScreen:
         MacroClearScreen 4fh ;04eh ;;4fh
     
-        MacroDisMsg Banner     
+    MacroDisMsg Banner     
+
     DisplayMenu:  
         MacroDisMsg menu     
         
     GetInput:        
-        MacroAcceptChar  
-        mov bl,al           ;move al to bl      
+        MacroAcceptChar    
 
         ;if bigger than 5 or smaller than 1 -> display invalid input
         cmp al, '5'
@@ -90,6 +101,7 @@ MAIN PROC
         cmp al, '1'
         jl  InvalidInput
         
+        ;if valid input, then direct to function
         cmp al, "1"
         je  NPtrn
         cmp al, "2"
@@ -114,7 +126,6 @@ MAIN PROC
     ContinueProgram:
         MacroDisMsg wannaContinue
         MacroAcceptChar
-        mov bl,al           ;move al to bl
         cmp al, 'y'
         je  ClearScreen
         cmp al, 'Y'
@@ -135,27 +146,41 @@ MAIN PROC
         MacroClearScreen 04eh
         MacroDisMsg invalidInputMsg 
         jmp ContinueProgram 
-        
-main endp
 
-;PROCEDURE FUNCTION
+main endp
+;=======================================================
+;                    PROCEDURE FUNCTION              
+;=======================================================
+
+;#######################################################
+;               NUMBER PATTERN - DIAMOND               
+;#######################################################
 NumberPattern PROC
     DiamondStart:
     MacroClearScreen 1fh
     MacroDisMsg msg1 
-;dynamic---------------------------------------------
+;--------------------------------------------------
+;<<<<<<<<<<<<< Accept Input - Dynamic >>>>>>>>>>>>>
+;--------------------------------------------------
+
     MacroDisMsg displayNumberNoPttrn
     MacroAcceptChar
-    cbw               ; AH = 0 or 0xFF according to top bit of AL, convert input into word
-    mov  si, ax
+    cbw             ;convert input into char ASCII
+    mov si, ax
+    
+    ;input is invalid
     cmp si, '3'
     jl DiamondStart
 
     cmp si, '9'
     jg DiamondStart
-    sub si, 48      ;move ASCII
 
-;-----------------------------------------start pattern 
+    ;input is valid
+    sub si, 48      ;move char ASCII to dec's ASCII
+
+;--------------------------------------------------
+;<<<<<<<<<<<<< Upper Diamond Start >>>>>>>>>>>>>>>
+;--------------------------------------------------
     mov ah, 2
     MacroNewLine
 
@@ -213,7 +238,11 @@ NumberPattern PROC
     DiamondUp:
         MacroNewLine
         loop OuterUpDiamonLoop
-;=====================================================================
+
+;--------------------------------------------------
+;<<<<<<<<<<<<< Lower Diamond Start >>>>>>>>>>>>>>>
+;--------------------------------------------------
+
     mov ah, 2
     dec si
     mov cx,si ;num=7 , have to dec 1
@@ -276,6 +305,9 @@ NumberPattern PROC
     ret
 NumberPattern endp
 
+;#######################################################
+;                   DESIGN PATTERN - X                
+;#######################################################
 DesignPattern PROC
     MacroClearScreen 04eh
     MacroDisMsg msg2
@@ -284,6 +316,9 @@ DesignPattern PROC
     ret
 DesignPattern endp
 
+;#######################################################
+;                   BOX PATTERN - SQUARE              
+;#######################################################
 BoxTypePattern PROC
     MacroClearScreen 04eh
     MacroDisMsg msg2
@@ -406,6 +441,9 @@ SquareInnerRight PROC
     ret
 SquareInnerRight endp
 
+;#######################################################
+;           NESTED LOOP PATTERN - 4 TRIANGLE               
+;#######################################################
 NestedLoopPattern PROC
     NestedLoopStart: 
     MacroClearScreen 0fh

@@ -24,13 +24,13 @@
 
     displayNoPttrn db "How many row you wanted to display? $"
 
-    DesignRow15 db "X   X$"
-    DesignRow24 db " X X $"
-    DesignRow3 db "  X  $"
+    DesignPatternRow15 db 35,0,0,0,35,"$"
+    DesignPatternRow24 db 0,35,0,35,0,"$"
+    DesignPatternRow3 db 0,0,35,0,0,"$"
 
-    DesignRow15End db "X",10,'$'
-    DesignRow24End db " X",10,'$'
-    DesignRow3End  db "  X",10,'$'
+    DesignPatternRow15End db 35,,10,'$'
+    DesignPatternRow24End db 0,35,10,'$'
+    DesignPatternRow3End  db 0,0,35,10,'$'
 .code
 
 ;MACRO FUNCTION 
@@ -82,52 +82,53 @@ MAIN PROC
             sub bl, 48 ;convert "3" to 3
             mov ah,2
         MacroNewLine
+        MacroNewLine
            
 ;-------------------------------------
         mov cl, 0
         Row1Start:
-        MacroDisMsg DesignRow15
+        MacroDisMsg DesignPatternRow15
 
         inc cl
         cmp cl, bl
         jne Row1Start
 
-        MacroDisMsg DesignRow15End
+        MacroDisMsg DesignPatternRow15End
 ;-------------------------------------
         mov cl, 0
         Row2Start:
-        MacroDisMsg DesignRow24
+        MacroDisMsg DesignPatternRow24
         inc cl
         cmp cl, bl
         jne Row2Start
-        MacroDisMsg DesignRow24End
+        MacroDisMsg DesignPatternRow24End
 ;-------------------------------------
         mov cl, 0
         Row3Start:
-        MacroDisMsg DesignRow3
+        MacroDisMsg DesignPatternRow3
         inc cl
         cmp cl, bl
         jne Row3Start
-        MacroDisMsg DesignRow3End
+        MacroDisMsg DesignPatternRow3End
 
 ;-------------------------------------
         mov cl, 0
         Row4Start:
-        MacroDisMsg DesignRow24
+        MacroDisMsg DesignPatternRow24
         inc cl
         cmp cl, bl
         jne Row4Start
-        MacroDisMsg DesignRow24End
+        MacroDisMsg DesignPatternRow24End
 ;-------------------------------------
         mov cl, 0
         Row5Start:
-        MacroDisMsg DesignRow15
+        MacroDisMsg DesignPatternRow15
 
         inc cl
         cmp cl, bl
         jne Row5Start
 
-        MacroDisMsg DesignRow15End
+        MacroDisMsg DesignPatternRow15End
 
 
     mov ah,4ch 
