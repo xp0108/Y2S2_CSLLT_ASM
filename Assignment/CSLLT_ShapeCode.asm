@@ -2,8 +2,14 @@
 .stack 100h
 
 .data
-    menu    db 10,10,13,"!!!!! HAPPY INDEPENDENCE DAY, MALAYSIA !!!!!"
-            db 10,10,13,6,0,6,0,6,0,6,0,"MAIN MENU",0,6,0,6,0,6,0,6,0,13,10,10
+    Banner  db 10,13,"======================================================================="
+            db 10,13,"          HAPPY INDEPENDENT DAY @ ASIA PACIFIC UNIVERSITY"
+            db 10,13,"                     ORGANIZER: APU STUDENT ARC"
+            db 10,13,"                        DATE: 31 AUGUEST 2022"
+            db 10,13,"                     TIME: 4:00 p.m. - 9:00 p.m."
+            db 10,13,"               VENUE: ASIA PACIFIC UNIVERSITY, LEVEL 3"
+            db 10,13,"=======================================================================$"
+    menu    db 10,10,13,6,0,6,0,6,0,6,0,"MAIN MENU",0,6,0,6,0,6,0,6,0,13,10,10
             db "1. Number Patterns",13,10
             db "2. Design Patterns",13,10
             db "3. Box Type Patterns",13,10
@@ -68,6 +74,7 @@ MAIN PROC
     ClearScreen:
         MacroClearScreen 4fh ;04eh ;;4fh
     
+        MacroDisMsg Banner     
     DisplayMenu:  
         MacroDisMsg menu     
         
