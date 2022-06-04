@@ -389,61 +389,59 @@ BoxTypePattern PROC
     MacroClearScreen 04eh
     MacroDisMsg msg2
 
-        mov ah, 3
-;-------------------------
-;UPPER SQUARE
-    mov bl, 1 ;i=1, int i = 1
-    UpperSquareOutter:
-    ;UPPER SQUARE _ INNER LEFT
-    USIL: call SquareInnerLeft
+    mov ah, 3
+;==================================================
+;                   Upper Cube Start
+;==================================================
+    mov bh, 1 ;i=1, int i = 1
+    UpperCubeOutter:
+;<<<<<<<<<<<<< Inner Left Cube >>>>>>>>>>>>>
+    USIL: call InnerLoopCubeLeft
 
-    ;UPPER SQUARE _ INNER RIGHT
-    USIR: call SquareInnerRight
+;<<<<<<<<<<<<< Inner Right Cube >>>>>>>>>>>>>
+    USIR: call InnerLoopCubeRight
 
 ;-----------INNER LOOP END--------------
-    ExitUpperSquareOutter:
+    ExitUpperCubeOutter:
     
     MacroNewLine
 
-    inc bl
-    cmp bl, 5
-    jne UpperSquareOutter
+    inc bh
+    cmp bh, 5
+    jne UpperCubeOutter
+;==================================================
+;                   Lower Cube Start
+;==================================================
+    mov bh, 3 ;i=1, int i = 1
+    LowerCubeOutter:
+;<<<<<<<<<<<<< Inner Left Cube >>>>>>>>>>>>>
+    LSIL: call InnerLoopCubeLeft
 
-;---------UPPER SQUARE END----------------
-
-;-------------------------
-;LOWER SQUARE
-    mov bl, 3 ;i=1, int i = 1
-    LowerSquareOutter:
-    ;LOWER SQUARE _ INNER LEFT
-    LSIL: call SquareInnerLeft
-
-    ;LOWER SQUARE _ INNER RIGHT
-    LSIR: call SquareInnerRight
+;<<<<<<<<<<<<< Inner Right Cube >>>>>>>>>>>>>
+    LSIR: call InnerLoopCubeRight
     
-    ExitLowerSquareOutter:
+    ExitLowerCubeOutter:
 
     MacroNewLine
 
-    dec bl
-    cmp bl, 0
-    jne LowerSquareOutter
-;-------------------------
+    dec bh
+    cmp bh, 0
+    jne LowerCubeOutter
 
     jmp     ContinueProgram
     ret
 BoxTypePattern endp
 
-SquareInnerLeft PROC
-    mov cl, 1 ;int j = 1
-    InnerLoopLeft:  
+InnerLoopCubeLeft PROC
+    mov ch, 1 ;int j = 1
+    LoopCubeLeft:  
     mov tempVar, 52 ;tempVar = n = 4
 
-    cmp bl, cl
-    jl FirstIFFF
+    cmp bh, ch
+    jl InnerLoopCubeLeft_IF
     ;ELSE
-    SecondIFF:
-    sub tempVar, cl ;n - j
+    InnerLoopCubeLeft_ELSE:
+    sub tempVar, ch ;n - j
     inc tempVar ;+1
     mov ah, 2
     mov dl, tempVar
@@ -451,10 +449,10 @@ SquareInnerLeft PROC
     mov dl, 0
     int 21h
     
-    jmp InnerLoopLeftExit
+    jmp LoopCubeLeftExit
     ;IF
-    FirstIFFF:
-    sub tempVar, bl ;n - i
+    InnerLoopCubeLeft_IF:
+    sub tempVar, bh ;n - i
     inc tempVar ;+1
     mov ah, 2
     mov dl, tempVar
@@ -462,25 +460,25 @@ SquareInnerLeft PROC
     mov dl, 0
     int 21h
 
-    InnerLoopLeftExit:
-    inc cl
-    cmp cl, 5
-    jne InnerLoopLeft
+    LoopCubeLeftExit:
+    inc ch
+    cmp ch, 5
+    jne LoopCubeLeft
 
     ret
-SquareInnerLeft endp
+InnerLoopCubeLeft endp
 
-SquareInnerRight PROC
-    mov cl, 3 ;int j = 3 (n-1)
-    InnerLoopRight:
+InnerLoopCubeRight PROC
+    mov ch, 3 ;int j = 3 (n-1)
+    LoopCubeRight:
     mov tempVar, 52 ;tempVar = n = 4
 
     ;IF ELSE START
-    cmp bl, cl
-    jl FirstInnerUpLeftIFFF
+    cmp bh, ch
+    jl InnerLoopCubeRight_IF
     ;ELSE
-    SecondInnerUpLeftIFF:
-    sub tempVar, cl ;n - j
+    InnerLoopCubeRight_ELSE:
+    sub tempVar, ch ;n - j
     inc tempVar ;+1
     mov ah, 2
     mov dl, tempVar
@@ -488,10 +486,10 @@ SquareInnerRight PROC
     mov dl, 0
     int 21h
     
-    jmp InnerLoopRightExit
+    jmp LoopCubeRightExit
     ;IF
-    FirstInnerUpLeftIFFF:
-    sub tempVar, bl ;n - i
+    InnerLoopCubeRight_IF:
+    sub tempVar, bh ;n - i
     inc tempVar ;+1
     mov ah, 2
     mov dl, tempVar
@@ -499,14 +497,13 @@ SquareInnerRight PROC
     mov dl, 0
     int 21h
 
-    InnerLoopRightExit:
-    dec cl
-    cmp cl, 0
+    LoopCubeRightExit:
+    dec ch
+    cmp ch, 0
     
-    jne InnerLoopRight
+    jne LoopCubeRight
     ret
-SquareInnerRight endp
-
+InnerLoopCubeRight endp
 ;#######################################################
 ;           NESTED LOOP PATTERN - 4 TRIANGLE               
 ;#######################################################
