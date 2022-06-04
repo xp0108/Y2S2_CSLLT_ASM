@@ -87,7 +87,7 @@ MAIN PROC
     mov ds,ax
     
     ClearScreen:
-        MacroClearScreen 4fh ;04eh ;;4fh
+        MacroClearScreen 4fh ;4fh
     
     MacroDisMsg Banner     
 
@@ -141,12 +141,12 @@ MAIN PROC
         jge ContinueProgramInvalidInput
 
     InvalidInput:
-        MacroClearScreen 04eh
+        MacroClearScreen 4fh
         MacroDisMsg invalidInputMsg 
         jmp DisplayMenu 
 
     ContinueProgramInvalidInput:
-        MacroClearScreen 04eh
+        MacroClearScreen 4fh
         MacroDisMsg invalidInputMsg 
         jmp ContinueProgram 
 
@@ -310,7 +310,6 @@ NumberPattern endp
 ;                   DESIGN PATTERN - X                
 ;#######################################################
 DesignPattern PROC
-
     DesignPatternStart:
         MacroClearScreen 04eh
         MacroDisMsg msg2
@@ -392,7 +391,7 @@ DesignPattern endp
 ;###################################################################
 BoxTypePattern PROC
 BoxTypePatternStart:
-    MacroClearScreen 04eh
+    MacroClearScreen 14h
     MacroDisMsg msg2
 
 ;==================================================
@@ -543,7 +542,7 @@ InnerLoopCubeRight endp
 ;#######################################################
 NestedLoopPattern PROC
 NestedLoopStart: 
-    MacroClearScreen 0fh
+    MacroClearScreen 09h
     MacroDisMsg msg4 
 
 ;==================================================
@@ -565,14 +564,14 @@ NestedLoopStart:
 ;==================================================
 ;               Upper Left Triangle 
 ;==================================================
-    MacroClearScreen 0fh
+    MacroClearScreen 09h
     mov dh,1 ;row
     mov dl,0 ;column
     mov cx,di ;move user input to the counter (row counter)
     UpperLeftTri:
         push cx
         UpperLeftTriPrinting:
-            mov varColor, 1eh
+            mov varColor, 4
             mov bl,varColor
             mov al, 42
             mov ah, 2     ;set cursor position at 0, use for point 
@@ -597,7 +596,7 @@ NestedLoopStart:
         push cx 
             mov cx, si ;cx=1
             UpperRightTriPrinting:
-                mov varColor, 1eh
+                mov varColor, 11
                 mov bl,varColor
                 mov al,42
                 mov ah, 2     ;set cursor position at 0
@@ -605,7 +604,7 @@ NestedLoopStart:
                 mov ah, 9     ;display in horizontal line
                 int 10h       ;call BIOS
             loop UpperRightTriPrinting
-        inc si ;bx+1=2
+        inc si ;si+1=2
         
         inc dh  ;BIOS new line = + row
         pop cx  ;4
@@ -630,7 +629,7 @@ NestedLoopStart:
     
 
         LowerLeftTriPrinting:   
-            mov varColor, 1eh
+            mov varColor, 14
             mov bl,varColor    
 
             mov ah, 2   ;set cursor position at 0
@@ -642,7 +641,7 @@ NestedLoopStart:
             mov varRandom,al
         loop LowerLeftTriPrinting
 
-        inc si ;bx+1=2
+        inc si ;si+1=2
         pop cx  ;4
         inc dh ;BIOS new line = + row
     loop LowerLeftTri
@@ -656,7 +655,7 @@ NestedLoopStart:
     LowerRightTri:
 
         push cx
-        mov varColor, 4
+        mov varColor, 15
         mov bl,varColor
         mov al,49
         LowerRightTriPrinting:   
