@@ -280,7 +280,7 @@ NumberPattern PROC
     push cx ;push outer cx
     dec cx
     cmp cx,1
-    jl NumberPatternEnd
+    jl NumberPatternDone
         dec tempVar
         LowerDescTri:
             dec tempVar
@@ -297,7 +297,7 @@ NumberPattern PROC
     MacroNewLine
     loop OuterLoopLowerDiamond
     
-    NumberPatternEnd:
+    NumberPatternDone:
     jmp ContinueProgram
     ret
 NumberPattern endp
@@ -306,9 +306,78 @@ NumberPattern endp
 ;                   DESIGN PATTERN - X                
 ;#######################################################
 DesignPattern PROC
-    MacroClearScreen 04eh
-    MacroDisMsg msg2
 
+    DesignPatternStart:
+        MacroClearScreen 04eh
+        MacroDisMsg msg2
+    
+;==================================================
+;               Accept Input - Dynamic
+;==================================================
+    MacroDisMsg displayDesignNoPttrn
+    MacroAcceptChar
+    mov bl, al
+    
+    ;input is invalid
+    cmp bl, '1'
+    jl DesignPatternStart
+
+    cmp bl, '9'
+    jg DesignPatternStart
+
+    ;input is valid
+    sub bl, 48      ;move char ASCII to dec's ASCII
+
+    mov ah, 2
+    MacroNewLine
+    MacroNewLine
+
+;==================================================
+;               Print Row 1 & 5
+;==================================================
+    mov tempVar, 1 ;initialize - for row 1,2,3
+    
+    LoopAgainForRow5:
+        mov cl, 0
+        Row15Start:
+        MacroDisMsg DesignPatternRow15
+
+        inc cl
+        cmp cl, bl ;cl - as a counter, bl - user input
+        jne Row15Start
+        MacroDisMsg DesignPatternRow15End
+    cmp tempVar, 2
+    je DesignPatternDone ;Skip Row 3
+
+;==================================================
+;               Print Row 2 & 4 
+;==================================================
+    LoopAgainForRow4:
+        mov cl, 0
+        Row24Start:
+        MacroDisMsg DesignPatternRow24
+        inc cl
+        cmp cl, bl
+        jne Row24Start
+        MacroDisMsg DesignPatternRow24End
+    cmp tempVar, 2
+    je LoopAgainForRow5
+;==================================================
+;               Print Row 3
+;==================================================
+        mov cl, 0
+        Row3Start:
+        MacroDisMsg DesignPatternRow3
+        inc cl
+        cmp cl, bl
+        jne Row3Start
+        MacroDisMsg DesignPatternRow3End
+    
+    inc tempVar ;increase the tempVar for printing Row 4 & 5
+    cmp tempVar, 2
+    je LoopAgainForRow4
+
+DesignPatternDone:
     jmp     ContinueProgram
     ret
 DesignPattern endp

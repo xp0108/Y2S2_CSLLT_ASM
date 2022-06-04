@@ -84,25 +84,39 @@ MAIN PROC
         MacroNewLine
         MacroNewLine
            
-;-------------------------------------
+;==================================================
+;               Print Row 1 & 5
+;==================================================
+    mov tempVar, 1 ;initialize - for row 1,2,3
+    
+    LoopAgainForRow5:
         mov cl, 0
-        Row1Start:
+        Row15Start:
         MacroDisMsg DesignPatternRow15
 
         inc cl
-        cmp cl, bl
-        jne Row1Start
-
+        cmp cl, bl ;cl - as a counter, bl - user input
+        jne Row15Start
         MacroDisMsg DesignPatternRow15End
-;-------------------------------------
+    cmp tempVar, 2
+    je DesignPatternDone ;Skip Row 3
+
+;==================================================
+;               Print Row 2 & 4 
+;==================================================
+    LoopAgainForRow4:
         mov cl, 0
-        Row2Start:
+        Row24Start:
         MacroDisMsg DesignPatternRow24
         inc cl
         cmp cl, bl
-        jne Row2Start
+        jne Row24Start
         MacroDisMsg DesignPatternRow24End
-;-------------------------------------
+    cmp tempVar, 2
+    je LoopAgainForRow5
+;==================================================
+;               Print Row 3
+;==================================================
         mov cl, 0
         Row3Start:
         MacroDisMsg DesignPatternRow3
@@ -110,27 +124,12 @@ MAIN PROC
         cmp cl, bl
         jne Row3Start
         MacroDisMsg DesignPatternRow3End
+    
+    inc tempVar ;increase the tempVar for printing Row 4 & 5
+    cmp tempVar, 2
+    je LoopAgainForRow4
 
-;-------------------------------------
-        mov cl, 0
-        Row4Start:
-        MacroDisMsg DesignPatternRow24
-        inc cl
-        cmp cl, bl
-        jne Row4Start
-        MacroDisMsg DesignPatternRow24End
-;-------------------------------------
-        mov cl, 0
-        Row5Start:
-        MacroDisMsg DesignPatternRow15
-
-        inc cl
-        cmp cl, bl
-        jne Row5Start
-
-        MacroDisMsg DesignPatternRow15End
-
-
+DesignPatternDone:
     mov ah,4ch 
     int 21h 
 main endp
