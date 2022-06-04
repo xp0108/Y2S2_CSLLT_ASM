@@ -31,6 +31,7 @@
 
     displayNestedNoPttrn db "Row To Display [4~9]: $"
     displayNumberNoPttrn db "Row To Display [3~9]: $"
+    displayDesignNoPttrn db "Row To Display [1~9]: $"
 .code
 
 ;MACRO FUNCTION 
