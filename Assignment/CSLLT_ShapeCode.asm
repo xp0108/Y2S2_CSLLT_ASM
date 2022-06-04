@@ -26,8 +26,8 @@
     
     wannaContinue db 10,10,13, "Do you wanted to continue the program [Y/N] ? " ,0, '$'
 
-    tempVar db ?
-    colour db ?
+    varRandom db ?
+    varColor db ?
     incNum db ?
     decNum db ?
 
@@ -182,6 +182,7 @@ NumberPattern PROC
 
     mov ah, 2
     MacroNewLine
+    MacroNewLine
 ;==================================================
 ;               Upper Diamond Start 
 ;==================================================
@@ -204,13 +205,13 @@ NumberPattern PROC
         mov cx, bx ;cx=1
 
         mov dl,49   ;Ascii 1 ; num = 1
-        mov tempVar,dl
+        mov varRandom,dl
         UpperAscTri:
-            mov dl, tempVar  ;move tempVar to dl 
+            mov dl, varRandom  ;move varRandom to dl 
             int 21h          ;print
             inc dl           ;dl+1
             
-            mov tempVar,dl  ;backup the latest dl into tempVar (dl = tempVar)         
+            mov varRandom,dl  ;backup the latest dl into varRandom (dl = varRandom)         
             mov dl, 0   ;dl use to print, Ascii 0 = null 
             int 21h     ;print 
         loop UpperAscTri
@@ -224,13 +225,13 @@ NumberPattern PROC
         dec bx  ;2-1
         mov cx, bx ;bx=1,cx=1
         dec cx 
-        dec tempVar
+        dec varRandom
         UpperDescTri:
-            dec tempVar  ;move tempVar to dl 
-            mov dl, tempVar
+            dec varRandom  ;move varRandom to dl 
+            mov dl, varRandom
             int 21h          ;print
             
-            mov tempVar,dl  ;backup the latest dl into tempVar (dl = tempVar)         
+            mov varRandom,dl  ;backup the latest dl into varRandom (dl = varRandom)         
             mov dl, 0   ;dl use to print, Ascii 0 = null 
             int 21h     ;print 
         loop UpperDescTri
@@ -268,13 +269,13 @@ NumberPattern PROC
 ;<<<<<<<<<<<<< Inner Loop - Ascending Triangle >>>>>>>>>>>>>
     push cx
         mov dl,49   ;Ascii 1 ; num = 1
-        mov tempVar,dl
+        mov varRandom,dl
         LowerAscTri:
-            mov dl, tempVar  ;move tempVar to dl 
+            mov dl, varRandom  ;move varRandom to dl 
             int 21h          ;print
             inc dl           ;dl+1
             
-            mov tempVar,dl  ;backup the latest dl into tempVar (dl = tempVar)         
+            mov varRandom,dl  ;backup the latest dl into varRandom (dl = varRandom)         
             mov dl, 0   ;dl use to print, Ascii 0 = null 
             int 21h     ;print 
         loop LowerAscTri
@@ -284,13 +285,13 @@ NumberPattern PROC
     dec cx
     cmp cx,1
     jl NumberPatternDone
-        dec tempVar
+        dec varRandom
         LowerDescTri:
-            dec tempVar
-            mov dl, tempVar
+            dec varRandom
+            mov dl, varRandom
             int 21h
             
-            mov tempVar,dl         
+            mov varRandom,dl         
             mov dl, 0   
             int 21h  
         loop LowerDescTri
@@ -338,7 +339,7 @@ DesignPattern PROC
 ;==================================================
 ;               Print Row 1 & 5
 ;==================================================
-    mov tempVar, 1 ;initialize - for row 1,2,3
+    mov varRandom, 1 ;initialize - for row 1,2,3
     
     LoopAgainForRow5:
         mov cl, 0
@@ -349,7 +350,7 @@ DesignPattern PROC
         cmp cl, bl ;cl - as a counter, bl - user input
         jne Row15Start
         MacroDisMsg DesignPatternRow15End
-    cmp tempVar, 2
+    cmp varRandom, 2
     je DesignPatternDone ;Skip Row 3
 
 ;==================================================
@@ -363,7 +364,7 @@ DesignPattern PROC
         cmp cl, bl
         jne Row24Start
         MacroDisMsg DesignPatternRow24End
-    cmp tempVar, 2
+    cmp varRandom, 2
     je LoopAgainForRow5
 ;==================================================
 ;               Print Row 3
@@ -376,8 +377,8 @@ DesignPattern PROC
         jne Row3Start
         MacroDisMsg DesignPatternRow3End
     
-    inc tempVar ;increase the tempVar for printing Row 4 & 5
-    cmp tempVar, 2
+    inc varRandom ;increase the varRandom for printing Row 4 & 5
+    cmp varRandom, 2
     je LoopAgainForRow4
 
 DesignPatternDone:
@@ -420,6 +421,7 @@ BoxTypePatternStart:
     dec decNum ;n+1
 
     mov ah, 2
+    MacroNewLine
     MacroNewLine
 
 ;==================================================
@@ -466,16 +468,16 @@ BoxTypePattern endp
 InnerLoopCubeLeft PROC
     mov ch, 1 ;j = 1 -> inner cube 
     LoopCubeLeft:  
-    mov tempVar, cl ;tempVar = n = user input (ASCII char)
+    mov varRandom, cl ;varRandom = n = user input (ASCII char)
 
     cmp bh, ch
     jl InnerLoopCubeLeft_IF
     ;else - System.out.print(n - j + 1 + " ")
     InnerLoopCubeLeft_ELSE:
-    sub tempVar, ch ;n - j
-    inc tempVar ;n - i + 1
+    sub varRandom, ch ;n - j
+    inc varRandom ;n - i + 1
     mov ah, 2
-    mov dl, tempVar
+    mov dl, varRandom
     int 21h
     mov dl, 0
     int 21h
@@ -483,10 +485,10 @@ InnerLoopCubeLeft PROC
     jmp LoopCubeLeftExit
     ;if - System.out.print(n - i + 1 + " ")
     InnerLoopCubeLeft_IF:
-    sub tempVar, bh ;n - i
-    inc tempVar ;n - i + 1
+    sub varRandom, bh ;n - i
+    inc varRandom ;n - i + 1
     mov ah, 2
-    mov dl, tempVar
+    mov dl, varRandom
     int 21h
     mov dl, 0
     int 21h
@@ -502,17 +504,17 @@ InnerLoopCubeLeft endp
 InnerLoopCubeRight PROC
     mov ch, decNum ;j = user input - 1
     LoopCubeRight:
-    mov tempVar, cl ;tempVar = n = 4
+    mov varRandom, cl ;varRandom = n = 4
 
     ;Start if else statement
     cmp bh, ch
     jl InnerLoopCubeRight_IF
     ;else - System.out.print(n - j + 1 + " ")
     InnerLoopCubeRight_ELSE:
-    sub tempVar, ch ;n - j
-    inc tempVar ;n - i + 1
+    sub varRandom, ch ;n - j
+    inc varRandom ;n - i + 1
     mov ah, 2
-    mov dl, tempVar
+    mov dl, varRandom
     int 21h
     mov dl, 0
     int 21h
@@ -520,10 +522,10 @@ InnerLoopCubeRight PROC
     jmp LoopCubeRightExit
     ;if - System.out.print(n - i + 1 + " ")
     InnerLoopCubeRight_IF:
-    sub tempVar, bh ;n - i
-    inc tempVar ;n - i + 1
+    sub varRandom, bh ;n - i
+    inc varRandom ;n - i + 1
     mov ah, 2
-    mov dl, tempVar
+    mov dl, varRandom
     int 21h
     mov dl, 0
     int 21h
@@ -570,8 +572,8 @@ NestedLoopStart:
     UpperLeftTri:
         push cx
         UpperLeftTriPrinting:
-            mov colour, 1eh
-            mov bl,colour
+            mov varColor, 1eh
+            mov bl,varColor
             mov al, 42
             mov ah, 2     ;set cursor position at 0, use for point 
             int 10h       ;call BIOS
@@ -595,8 +597,8 @@ NestedLoopStart:
         push cx 
             mov cx, si ;cx=1
             UpperRightTriPrinting:
-                mov colour, 1eh
-                mov bl,colour
+                mov varColor, 1eh
+                mov bl,varColor
                 mov al,42
                 mov ah, 2     ;set cursor position at 0
                 int 10h       ;call BIOS
@@ -618,7 +620,7 @@ NestedLoopStart:
 
     mov cx,di ;row ,i=5
     mov si, 1 ;j = column
-    ;num = tempVar
+    ;num = varRandom
     LowerLeftTri:
 
         push cx
@@ -628,8 +630,8 @@ NestedLoopStart:
     
 
         LowerLeftTriPrinting:   
-            mov colour, 1eh
-            mov bl,colour    
+            mov varColor, 1eh
+            mov bl,varColor    
 
             mov ah, 2   ;set cursor position at 0
             int 10h
@@ -637,7 +639,7 @@ NestedLoopStart:
             int 10h   
             
             inc al
-            mov tempVar,al
+            mov varRandom,al
         loop LowerLeftTriPrinting
 
         inc si ;bx+1=2
@@ -654,8 +656,8 @@ NestedLoopStart:
     LowerRightTri:
 
         push cx
-        mov colour, 4
-        mov bl,colour
+        mov varColor, 4
+        mov bl,varColor
         mov al,49
         LowerRightTriPrinting:   
             mov ah, 2 ;set cursor position
@@ -664,7 +666,7 @@ NestedLoopStart:
             int 10h     ;call BIOS               
             mov bh, 0
             inc al
-            mov tempVar,al
+            mov varRandom,al
         loop LowerRightTriPrinting
 
         pop cx  
