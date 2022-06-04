@@ -28,10 +28,13 @@
 
     tempVar db ?
     colour db ?
+    incNum db ?
+    decNum db ?
 
-    displayNestedNoPttrn db "Row To Display [4 - 9]: $"
-    displayNumberNoPttrn db "Row To Display [3 - 9]: $"
-    displayDesignNoPttrn db "Diamond To Display [1 - 9]: $"
+    displayNestedNoPttrn db "Number of Row To Display [4 - 9]: $"
+    displayNumberNoPttrn db "Number of Row To Display [3 - 9]: $"
+    displayDesignNoPttrn db "Number of Diamond To Display [1 - 9]: $"
+    displayBoxNoPttrn db "Number of Box To Display [2 - 9]: $"
 
     DesignPatternRow15 db 35,0,0,0,35,"$"
     DesignPatternRow24 db 0,35,0,35,0,"$"
@@ -382,41 +385,71 @@ DesignPatternDone:
     ret
 DesignPattern endp
 
-;#######################################################
-;                   BOX PATTERN - SQUARE              
-;#######################################################
+;###################################################################
+;                   BOX PATTERN - SQUARE   
+;Refer - // https://www.javatpoint.com/how-to-print-pattern-in-java           
+;###################################################################
 BoxTypePattern PROC
+BoxTypePatternStart:
     MacroClearScreen 04eh
     MacroDisMsg msg2
+
+;==================================================
+;               Accept Input - Dynamic
+;==================================================
+    MacroDisMsg displayBoxNoPttrn
+    MacroAcceptChar
+    mov bl, al
+    mov cl, al  ;cl -> ASCII Char ("4")
+    
+    ;input is invalid
+    cmp cl, '2'
+    jl BoxTypePatternStart
+
+    cmp cl, '9'
+    jg BoxTypePatternStart
+
+    ;input is valid
+    sub bl, 48      ;move char ASCII to dec's ASCII || bl = n
+
+    ;Predefine the Number
+    mov incNum, bl
+    inc incNum ;n+1
+
+    mov decNum, bl
+    dec decNum ;n+1
+
+    mov ah, 2
+    MacroNewLine
+
 ;==================================================
 ;                   Upper Cube Start
 ;==================================================
-    mov bh, 1 ;i=1, int i = 1
+    mov bh, 1 ;bh = i = 1
     UpperCubeOutter:
 ;<<<<<<<<<<<<< Inner Left Cube >>>>>>>>>>>>>
-    USIL: call InnerLoopCubeLeft
+    call InnerLoopCubeLeft
 
 ;<<<<<<<<<<<<< Inner Right Cube >>>>>>>>>>>>>
-    USIR: call InnerLoopCubeRight
+    call InnerLoopCubeRight
 
 ;-----------INNER LOOP END--------------
     ExitUpperCubeOutter:
-    
     MacroNewLine
 
     inc bh
-    cmp bh, 5
+    cmp bh, bl
     jne UpperCubeOutter
 ;==================================================
 ;                   Lower Cube Start
 ;==================================================
-    mov bh, 3 ;i=1, int i = 1
+    mov bh, bl ;i = user input 
     LowerCubeOutter:
 ;<<<<<<<<<<<<< Inner Left Cube >>>>>>>>>>>>>
-    LSIL: call InnerLoopCubeLeft
+    call InnerLoopCubeLeft
 
 ;<<<<<<<<<<<<< Inner Right Cube >>>>>>>>>>>>>
-    LSIR: call InnerLoopCubeRight
+    call InnerLoopCubeRight
     
     ExitLowerCubeOutter:
 
@@ -431,16 +464,16 @@ BoxTypePattern PROC
 BoxTypePattern endp
 
 InnerLoopCubeLeft PROC
-    mov ch, 1 ;int j = 1
+    mov ch, 1 ;j = 1 -> inner cube 
     LoopCubeLeft:  
-    mov tempVar, 52 ;tempVar = n = 4
+    mov tempVar, cl ;tempVar = n = user input (ASCII char)
 
     cmp bh, ch
     jl InnerLoopCubeLeft_IF
-    ;ELSE
+    ;else - System.out.print(n - j + 1 + " ")
     InnerLoopCubeLeft_ELSE:
     sub tempVar, ch ;n - j
-    inc tempVar ;+1
+    inc tempVar ;n - i + 1
     mov ah, 2
     mov dl, tempVar
     int 21h
@@ -448,10 +481,10 @@ InnerLoopCubeLeft PROC
     int 21h
     
     jmp LoopCubeLeftExit
-    ;IF
+    ;if - System.out.print(n - i + 1 + " ")
     InnerLoopCubeLeft_IF:
     sub tempVar, bh ;n - i
-    inc tempVar ;+1
+    inc tempVar ;n - i + 1
     mov ah, 2
     mov dl, tempVar
     int 21h
@@ -460,24 +493,24 @@ InnerLoopCubeLeft PROC
 
     LoopCubeLeftExit:
     inc ch
-    cmp ch, 5
+    cmp ch, incNum
     jne LoopCubeLeft
 
     ret
 InnerLoopCubeLeft endp
 
 InnerLoopCubeRight PROC
-    mov ch, 3 ;int j = 3 (n-1)
+    mov ch, decNum ;j = user input - 1
     LoopCubeRight:
-    mov tempVar, 52 ;tempVar = n = 4
+    mov tempVar, cl ;tempVar = n = 4
 
-    ;IF ELSE START
+    ;Start if else statement
     cmp bh, ch
     jl InnerLoopCubeRight_IF
-    ;ELSE
+    ;else - System.out.print(n - j + 1 + " ")
     InnerLoopCubeRight_ELSE:
     sub tempVar, ch ;n - j
-    inc tempVar ;+1
+    inc tempVar ;n - i + 1
     mov ah, 2
     mov dl, tempVar
     int 21h
@@ -485,10 +518,10 @@ InnerLoopCubeRight PROC
     int 21h
     
     jmp LoopCubeRightExit
-    ;IF
+    ;if - System.out.print(n - i + 1 + " ")
     InnerLoopCubeRight_IF:
     sub tempVar, bh ;n - i
-    inc tempVar ;+1
+    inc tempVar ;n - i + 1
     mov ah, 2
     mov dl, tempVar
     int 21h
