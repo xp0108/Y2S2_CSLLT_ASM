@@ -511,76 +511,86 @@ SquareInnerRight endp
 ;           NESTED LOOP PATTERN - 4 TRIANGLE               
 ;#######################################################
 NestedLoopPattern PROC
-    NestedLoopStart: 
+NestedLoopStart: 
     MacroClearScreen 0fh
     MacroDisMsg msg4 
+
+;==================================================
+;               Accept Input - Dynamic
+;==================================================
     MacroDisMsg displayNestedNoPttrn
     MacroAcceptChar
-    cbw               ; AH = 0 or 0xFF according to top bit of AL/convert byte to word/ascii
-    mov  di, ax
-    cmp di, '4'
+    cbw             ;convert input into char ASCII
+    mov  si, ax     ;si carry user input
+    cmp si, '4'
     jl NestedLoopStart
 
-    cmp di, '9'
+    cmp si, '9'
     jg NestedLoopStart
-    sub di, 48
+    sub si, 48      ;move char ASCII to dec's ASCII
 
     mov ah,2
-    mov cx,di
+    mov cx,si
 
-;TOP LEFT------------------------------------------------------------
+;==================================================
+;               Upper Left Triangle 
+;==================================================
     MacroClearScreen 0fh
     mov dh,1 ;row
-    mov dl,0 ;col
-    mov cx,di
-    StartTopLeft:
+    mov dl,0 ;column
+    mov cx,si ;move user input to the counter (row counter)
+    UpperLeftTri:
         push cx
-        StartTopLeftPrint:
+        UpperLeftTriPrinting:
             mov colour, 1eh
             mov bl,colour
-            mov al,42
-            mov ah, 2     ;cursor start at 0
-            int 10h
-            mov ah, 9     ; print horizontal
-            int 10h
-        loop StartTopLeftPrint
+            mov al, 42
+            mov ah, 2     ;set cursor position at 0
+            int 10h       ;call BIOS
+            mov ah, 9     ;display in horizontal line
+            int 10h       ;call BIOS
+        loop UpperLeftTriPrinting
 
-        inc dh
+        inc dh  ;BIOS new line = + row 
         pop cx
-    loop StartTopLeft
+    loop UpperLeftTri
 
-;TOP RIGHT------------------------------------------------------------
+;==================================================
+;               Upper Right Triangle 
+;==================================================
 
     mov dh,1 ;row
-    mov dl,18 ;col
-    mov cx,di ;row count
+    mov dl,18 ;column
+    mov cx,si ;move user input to the counter (row counter)
     mov si,1
-    StartTopRight:
+    UpperRightTri:
         push cx 
             mov cx, si ;cx=1
-            StartTopRightPrint:
+            UpperRightTriPrinting:
                 mov colour, 1eh
                 mov bl,colour
                 mov al,42
-                mov ah, 2     ;cursor start at 0
-                int 10h
-                mov ah, 9     ; print horizontal
-                int 10h
-            loop StartTopRightPrint
+                mov ah, 2     ;set cursor position at 0
+                int 10h       ;call BIOS
+                mov ah, 9     ;display in horizontal line
+                int 10h       ;call BIOS
+            loop UpperRightTriPrinting
         inc si ;bx+1=2
         
-        inc dh  ;nextline
+        inc dh  ;BIOS new line = + row
         pop cx  ;4
-    loop StartTopRight
+    loop UpperRightTri
 
-;BOTTOM LEFT-------------------------------------------------------
+;==================================================
+;               Lower Left Triangle 
+;==================================================
 
     mov dh,14    ;row
     mov dl,0    ;column
-    mov cx,di ;row ,i=5
+    mov cx,si ;row ,i=5
     mov si, 1 ;j = column
     ;num = tempVar
-    NumberBottomLeft:
+    LowerLeftTri:
 
         push cx
         mov cx, si ;cx=1
@@ -589,36 +599,36 @@ NestedLoopPattern PROC
     
         mov tempVar,al
 
-        NumberBottomLeftPrint:   
+        LowerLeftTriPrinting:   
             mov al, tempVar                 
             mov bh, 0
-            mov ah, 2 ;set cursor position
+            mov ah, 2   ;set cursor position at 0
             int 10h
-            mov ah, 09h ;display chara
-            int 10h     ;call BIOS
+            mov ah, 9   ;display in horizontal line
+            int 10h   
             inc al
             mov tempVar,al
-        loop NumberBottomLeftPrint
-        
+        loop LowerLeftTriPrinting
+
         inc si ;bx+1=2
-        
         pop cx  ;4
+        inc dh ;BIOS new line = + row
+    loop LowerLeftTri
 
-        inc dh ;inc row
-    loop NumberBottomLeft
-
-;BOTTOM RIGHT-----------------------------------------
+;==================================================
+;               Lower Right Triangle 
+;==================================================
     mov dh,14    ;row
     mov dl,18    ;column
-    mov cx,di ;row count ,i=5
-    NumberBottomRight:
+    mov cx,si ;row count ,i=5
+    LowerRightTri:
 
         push cx
         mov colour, 4  ;
         mov bl,colour
         mov al,49
         mov tempVar,al
-        NumberBottomRightPrint:   
+        LowerRightTriPrinting:   
             mov al, tempVar                 
             mov bh, 0
             mov ah, 2 ;set cursor position
@@ -627,16 +637,15 @@ NestedLoopPattern PROC
             int 10h     ;call BIOS
             inc al
             mov tempVar,al
-        loop NumberBottomRightPrint
+        loop LowerRightTriPrinting
+
         pop cx  ;4
+        inc dh  ;BIOS new line = + row
+        loop LowerRightTri
 
-        inc dh  ;new row/newline
-    loop NumberBottomRight
-
-NestedLoopEnd:
-
-    jmp ContinueProgram
-    ret
+    NestedLoopEnd:
+        jmp ContinueProgram
+        ret
 
 NestedLoopPattern endp
 
