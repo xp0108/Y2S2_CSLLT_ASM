@@ -83,141 +83,123 @@ MAIN PROC
     mov ax,@data
     mov ds,ax
 
-    NestedLoopStart: 
-    MacroClearScreen 0fh
-    MacroDisMsg msg4 
-
-;==================================================
-;               Accept Input - Dynamic
-;==================================================
-    MacroDisMsg displayNestedNoPttrn
-    MacroAcceptChar
-    cbw             ;convert input into char ASCII
-    mov  di, ax     ;di carry user input
-    cmp di, '4'
-    jl NestedLoopStart
-
-    cmp di, '9'
-    jg NestedLoopStart
-    sub di, 48      ;move char ASCII to dec's ASCII
-
-    mov ah,2
-
-;==================================================
-;               Upper Left Triangle 
-;==================================================
-    MacroClearScreen 0fh
-    mov dh,1 ;row
-    mov dl,0 ;column
-    mov cx,di ;move user input to the counter (row counter)
-    UpperLeftTri:
-        push cx
-        UpperLeftTriPrinting:
-            mov colour, 1eh
-            mov bl,colour
-            mov al, 42
-            mov ah, 2     ;set cursor position at 0, use for point 
-            int 10h       ;call BIOS
-            mov ah, 9     ;display in horizontal line
-            int 10h       ;call BIOS
-        loop UpperLeftTriPrinting
-        
-        inc dh  ;BIOS new line = + row 
-        pop cx
-    loop UpperLeftTri
-
-;==================================================
-;               Upper Right Triangle 
-;==================================================
-
-    mov dh,1 ;row
-    mov dl,18 ;column
-    mov cx,di ;move user input to the counter (row counter)
-    mov si,1
-    UpperRightTri:
-        push cx 
-            mov cx, si ;cx=1
-            UpperRightTriPrinting:
-                mov colour, 1eh
-                mov bl,colour
-                mov al,42
-                mov ah, 2     ;set cursor position at 0
-                int 10h       ;call BIOS
-                mov ah, 9     ;display in horizontal line
-                int 10h       ;call BIOS
-            loop UpperRightTriPrinting
-        inc si ;bx+1=2
-        
-        inc dh  ;BIOS new line = + row
-        pop cx  ;4
-    loop UpperRightTri
-
-;==================================================
-;               Lower Left Triangle 
-;==================================================
-
-    mov dh,14    ;row
-    mov dl,0    ;column
-
-    mov cx,di ;row ,i=5
-    mov si, 1 ;j = column
-    ;num = tempVar
-    LowerLeftTri:
-
-        push cx
-        mov cx, si ;loop column
-        
-        mov al,49
+    MacroClearScreen 04eh
+    MacroDisMsg msg2
     
-
-        LowerLeftTriPrinting:   
-            mov colour, 1eh
-            mov bl,colour    
-
-            mov ah, 2   ;set cursor position at 0
-            int 10h
-            mov ah, 9   ;display in horizontal line
-            int 10h   
-            
-            inc al
-            mov tempVar,al
-        loop LowerLeftTriPrinting
-
-        inc si ;bx+1=2
-        pop cx  ;4
-        inc dh ;BIOS new line = + row
-    loop LowerLeftTri
-
 ;==================================================
-;               Lower Right Triangle 
+;                   Upper Cube Start
 ;==================================================
-    mov dh,14    ;row
-    mov dl,18    ;column
-    mov cx,di ;row count ,i=5
-    LowerRightTri:
+    mov bh, 1 ;bh = i = 1
+    UpperCubeOutter:
+;<<<<<<<<<<<<< Inner Left Cube >>>>>>>>>>>>>
+    call InnerLoopCubeLeft
 
-        push cx
-        mov colour, 4
-        mov bl,colour
-        mov al,49
-        LowerRightTriPrinting:   
-            mov ah, 2 ;set cursor position
-            int 10h
-            mov ah, 09h ;display chara
-            int 10h     ;call BIOS               
-            mov bh, 0
-            inc al
-            mov tempVar,al
-        loop LowerRightTriPrinting
+;<<<<<<<<<<<<< Inner Right Cube >>>>>>>>>>>>>
+    call InnerLoopCubeRight
 
-        pop cx  
-        inc dh  ;BIOS new line = + row
-        loop LowerRightTri
+;-----------INNER LOOP END--------------
+    ExitUpperCubeOutter:
+    
+    MacroNewLine
 
-    NestedLoopEnd:
+    inc bh
+    cmp bh, 5
+    jne UpperCubeOutter
+;==================================================
+;                   Lower Cube Start
+;==================================================
+    mov bh, 3 ;i=1, int i = 1
+    LowerCubeOutter:
+;<<<<<<<<<<<<< Inner Left Cube >>>>>>>>>>>>>
+    call InnerLoopCubeLeft
+
+;<<<<<<<<<<<<< Inner Right Cube >>>>>>>>>>>>>
+    call InnerLoopCubeRight
+    
+    ExitLowerCubeOutter:
+
+    MacroNewLine
+
+    dec bh
+    cmp bh, 0
+    jne LowerCubeOutter
     
     mov   ah,4ch
     int   21h  
 
 main endp
+
+InnerLoopCubeLeft PROC
+    mov ch, 1 ;int j = 1
+    LoopCubeLeft:  
+    mov tempVar, 52 ;tempVar = n = 4
+
+    cmp bh, ch
+    jl InnerLoopCubeLeft_IF
+    ;ELSE
+    InnerLoopCubeLeft_ELSE:
+    sub tempVar, ch ;n - j
+    inc tempVar ;+1
+    mov ah, 2
+    mov dl, tempVar
+    int 21h
+    mov dl, 0
+    int 21h
+    
+    jmp LoopCubeLeftExit
+    ;IF
+    InnerLoopCubeLeft_IF:
+    sub tempVar, bh ;n - i
+    inc tempVar ;+1
+    mov ah, 2
+    mov dl, tempVar
+    int 21h
+    mov dl, 0
+    int 21h
+
+    LoopCubeLeftExit:
+    inc ch
+    cmp ch, 5
+    jne LoopCubeLeft
+
+    ret
+InnerLoopCubeLeft endp
+
+InnerLoopCubeRight PROC
+    mov ch, 3 ;int j = 3 (n-1)
+    LoopCubeRight:
+    mov tempVar, 52 ;tempVar = n = 4
+
+    ;IF ELSE START
+    cmp bh, ch
+    jl InnerLoopCubeRight_IF
+    ;ELSE
+    InnerLoopCubeRight_ELSE:
+    sub tempVar, ch ;n - j
+    inc tempVar ;+1
+    mov ah, 2
+    mov dl, tempVar
+    int 21h
+    mov dl, 0
+    int 21h
+    
+    jmp LoopCubeRightExit
+    ;IF
+    InnerLoopCubeRight_IF:
+    sub tempVar, bh ;n - i
+    inc tempVar ;+1
+    mov ah, 2
+    mov dl, tempVar
+    int 21h
+    mov dl, 0
+    int 21h
+
+    LoopCubeRightExit:
+    dec ch
+    cmp ch, 0
+    
+    jne LoopCubeRight
+    ret
+InnerLoopCubeRight endp
+
 end MAIN

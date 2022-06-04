@@ -388,8 +388,6 @@ DesignPattern endp
 BoxTypePattern PROC
     MacroClearScreen 04eh
     MacroDisMsg msg2
-
-    mov ah, 3
 ;==================================================
 ;                   Upper Cube Start
 ;==================================================
