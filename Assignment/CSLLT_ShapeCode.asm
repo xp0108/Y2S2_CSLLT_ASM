@@ -76,9 +76,9 @@ MacroClearScreen Macro colorVar
     mov dl,0        ;horizontal
     int 10h
 EndM
-;=======================================================
+;#######################################################
 ;                   PROGRAM START
-;=======================================================
+;#######################################################
 MAIN PROC 
     mov ax,@data
     mov ds,ax
@@ -148,9 +148,9 @@ MAIN PROC
         jmp ContinueProgram 
 
 main endp
-;=======================================================
+;#######################################################
 ;                    PROCEDURE FUNCTION              
-;=======================================================
+;#######################################################
 
 ;#######################################################
 ;               NUMBER PATTERN - DIAMOND               
@@ -241,15 +241,16 @@ NumberPattern PROC
 ;==================================================
 ;               Lower Diamond Start 
 ;==================================================
-
+;<<<<<<<<<<<<< Outer Loop >>>>>>>>>>>>>
     mov ah, 2
-    dec si
-    mov cx,si ;num=7 , have to dec 1
+    dec si ;do not loop 4, so decrease 1 = input - 1
+    mov cx,si
     mov bx, 1 ;j = column
     OuterLoopLowerDiamond:
     mov dl,0            
     int 21h
     int 21h
+;<<<<<<<<<<<<< Inner Loop - Space Triangle >>>>>>>>>>>>>
         push cx
         mov cx, bx ;cx=1
 
@@ -261,7 +262,7 @@ NumberPattern PROC
         pop cx 
     
     inc bx 
-;-------------------------------------------------------
+;<<<<<<<<<<<<< Inner Loop - Ascending Triangle >>>>>>>>>>>>>
     push cx
         mov dl,49   ;Ascii 1 ; num = 1
         mov tempVar,dl
@@ -275,8 +276,8 @@ NumberPattern PROC
             int 21h     ;print 
         loop LowerAscTri
     pop cx
-;--------------------------------------------------------------
-    push cx     ;8
+;<<<<<<<<<<<<< Inner Loop - Descending Triangle >>>>>>>>>>>>>
+    push cx ;push outer cx
     dec cx
     cmp cx,1
     jl NumberPatternEnd
@@ -286,9 +287,9 @@ NumberPattern PROC
             mov dl, tempVar
             int 21h
             
-            mov tempVar,dl  ;backup the latest dl into tempVar (dl = tempVar)         
-            mov dl, 0   ;dl use to print, Ascii 0 = null 
-            int 21h     ;print 
+            mov tempVar,dl         
+            mov dl, 0   
+            int 21h  
         loop LowerDescTri
     pop cx
 
