@@ -19,10 +19,10 @@
         
     invalidInputMsg db 10,10,"########## INVALID INPUT! ENTER AGAIN ##########",13,10,'$'
 
-    msg1 db "here is Number patterns",10,10,'$' 
-    msg2 db "here is Design patterns",10,10,'$' 
-    msg3 db "here is Box type patterns",10,10,'$'
-    msg4 db "here is Nested loop patterns",10,10,'$'
+    msg1 db "Here Is Number Pattern",10,10,'$' 
+    msg2 db "Here Is Design Pattern",10,10,'$' 
+    msg3 db "Here Is Box Type Pattern",10,10,'$'
+    msg4 db "Here Is Nested Loop Pattern",10,10,'$'
     
     wannaContinue db 10,10,13, "Do you wanted to continue the program [Y/N] ? " ,0, '$'
 
@@ -156,13 +156,12 @@ main endp
 ;               NUMBER PATTERN - DIAMOND               
 ;#######################################################
 NumberPattern PROC
-    DiamondStart:
+    DiamondPatternStart:
     MacroClearScreen 1fh
     MacroDisMsg msg1 
-;--------------------------------------------------
-;<<<<<<<<<<<<< Accept Input - Dynamic >>>>>>>>>>>>>
-;--------------------------------------------------
-
+;==================================================
+;               Accept Input - Dynamic
+;==================================================
     MacroDisMsg displayNumberNoPttrn
     MacroAcceptChar
     cbw             ;convert input into char ASCII
@@ -170,95 +169,95 @@ NumberPattern PROC
     
     ;input is invalid
     cmp si, '3'
-    jl DiamondStart
+    jl DiamondPatternStart
 
     cmp si, '9'
-    jg DiamondStart
+    jg DiamondPatternStart
 
     ;input is valid
     sub si, 48      ;move char ASCII to dec's ASCII
 
-;--------------------------------------------------
-;<<<<<<<<<<<<< Upper Diamond Start >>>>>>>>>>>>>>>
-;--------------------------------------------------
     mov ah, 2
     MacroNewLine
-
-    mov cx,si ;8 ;num=8
-    mov bx, 1 ;j = column
-    ;num = tempVar
-    OuterUpDiamonLoop:
+;==================================================
+;               Upper Diamond Start 
+;==================================================
+;<<<<<<<<<<<<< Outer Loop >>>>>>>>>>>>>
+    mov cx,si ;si = user input
+    mov bx, 1 ;bx = column
+    OuterLoopUpperDiamond:
         
-        push cx ;initial = 8 ; inner loop
+;<<<<<<<<<<<<< Inner Loop - Space Triangle >>>>>>>>>>>>>
+        push cx ;initial = take outer cx value
 
-        UpSpaceTri:   
-            mov dl, 0             
+        UpperSpaceTri:   
+            mov dl, 0   ;print 2 times space             
             int 21h
             int 21h
-        loop UpSpaceTri
+        loop UpperSpaceTri
     pop cx
-;-------------------------------------------------------
+;<<<<<<<<<<<<< Inner Loop - Ascending Triangle >>>>>>>>>>>>>
     push cx
         mov cx, bx ;cx=1
 
         mov dl,49   ;Ascii 1 ; num = 1
         mov tempVar,dl
-        UpAscTri:
+        UpperAscTri:
             mov dl, tempVar  ;move tempVar to dl 
             int 21h          ;print
             inc dl           ;dl+1
             
-            mov tempVar,dl  ;move dl to tempVar (dl = tempVar)         
-            mov dl, 0   ;dl use to print, Ascii 0 = space      
+            mov tempVar,dl  ;backup the latest dl into tempVar (dl = tempVar)         
+            mov dl, 0   ;dl use to print, Ascii 0 = null 
             int 21h     ;print 
-        loop UpAscTri
+        loop UpperAscTri
         inc bx  ;bx+1=2
     pop cx
-;--------------------------------------------------------------
-    push cx     ;8
-    push bx     ;2
+;<<<<<<<<<<<<< Inner Loop - Descending Triangle >>>>>>>>>>>>>
+    push cx  
+    push bx 
     cmp bx, 2
-    je DiamondUp
+    je UpperDiamondEnd
         dec bx  ;2-1
         mov cx, bx ;bx=1,cx=1
         dec cx 
         dec tempVar
-        UpDecTri:
+        UpperDescTri:
             dec tempVar  ;move tempVar to dl 
             mov dl, tempVar
             int 21h          ;print
             
-            mov tempVar,dl  ;move dl to tempVar (dl = tempVar)         
-            mov dl, 0   ;dl use to print, Ascii 0 = space      
+            mov tempVar,dl  ;backup the latest dl into tempVar (dl = tempVar)         
+            mov dl, 0   ;dl use to print, Ascii 0 = null 
             int 21h     ;print 
-        loop UpDecTri
+        loop UpperDescTri
     pop bx
     pop cx
 
-    DiamondUp:
+    UpperDiamondEnd:
         MacroNewLine
-        loop OuterUpDiamonLoop
+        loop OuterLoopUpperDiamond
 
-;--------------------------------------------------
-;<<<<<<<<<<<<< Lower Diamond Start >>>>>>>>>>>>>>>
-;--------------------------------------------------
+;==================================================
+;               Lower Diamond Start 
+;==================================================
 
     mov ah, 2
     dec si
     mov cx,si ;num=7 , have to dec 1
     mov bx, 1 ;j = column
-    OuterDownDiamonLoop:
+    OuterLoopLowerDiamond:
     mov dl,0            
     int 21h
     int 21h
         push cx
         mov cx, bx ;cx=1
 
-        DownSpaceTri:   
+        LowerSpaceTri:   
             mov dl,0            
             int 21h
             int 21h
-        loop DownSpaceTri
+        loop LowerSpaceTri
         pop cx 
     
     inc bx 
@@ -266,41 +265,38 @@ NumberPattern PROC
     push cx
         mov dl,49   ;Ascii 1 ; num = 1
         mov tempVar,dl
-        DownAscTri:
+        LowerAscTri:
             mov dl, tempVar  ;move tempVar to dl 
             int 21h          ;print
             inc dl           ;dl+1
             
-            mov tempVar,dl  ;move dl to tempVar (dl = tempVar)         
-            mov dl, 0   ;dl use to print, Ascii 0 = space      
+            mov tempVar,dl  ;backup the latest dl into tempVar (dl = tempVar)         
+            mov dl, 0   ;dl use to print, Ascii 0 = null 
             int 21h     ;print 
-        loop DownAscTri
+        loop LowerAscTri
     pop cx
 ;--------------------------------------------------------------
     push cx     ;8
     dec cx
     cmp cx,1
-    jl EndNumberPattern
-        ; dec bx  ;2-1
-        ; mov cx, bx ;bx=1,cx=1
+    jl NumberPatternEnd
         dec tempVar
-        DownDecTri:
-            dec tempVar  ;move tempVar to dl 
+        LowerDescTri:
+            dec tempVar
             mov dl, tempVar
-            int 21h          ;print
+            int 21h
             
-            mov tempVar,dl  ;move dl to tempVar (dl = tempVar)         
-            mov dl, 0   ;dl use to print, Ascii 0 = space      
+            mov tempVar,dl  ;backup the latest dl into tempVar (dl = tempVar)         
+            mov dl, 0   ;dl use to print, Ascii 0 = null 
             int 21h     ;print 
-        loop DownDecTri
+        loop LowerDescTri
     pop cx
 
-
-    DiamondDown:
+    DiamondDownEnd:
     MacroNewLine
-    loop OuterDownDiamonLoop
+    loop OuterLoopLowerDiamond
     
-    EndNumberPattern:
+    NumberPatternEnd:
     jmp ContinueProgram
     ret
 NumberPattern endp
