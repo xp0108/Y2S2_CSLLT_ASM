@@ -596,7 +596,7 @@ NestedLoopStart:
         push cx 
             mov cx, si ;cx=1
             UpperRightTriPrinting:
-                mov varColor, 11
+                mov varColor, 1
                 mov bl,varColor
                 mov al,42
                 mov ah, 2     ;set cursor position at 0
