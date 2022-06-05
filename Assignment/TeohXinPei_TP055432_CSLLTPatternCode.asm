@@ -34,8 +34,8 @@
     incNum db ?
     decNum db ?
 
-    displayNestedNoPttrn db "Number of Row To Display [4 - 9]: $"
-    displayNumberNoPttrn db "Number of Row To Display [3 - 9]: $"
+    displayNestedNoPttrn db "Number of Triangle To Display [4 - 9]: $"
+    displayNumberNoPttrn db "Number To Display [3 - 9]: $"
     displayDesignNoPttrn db "Number of Diamond To Display [1 - 9]: $"
     displayBoxNoPttrn db "Number of Box To Display [2 - 9]: $"
 
@@ -396,7 +396,7 @@ DesignPattern endp
 BoxTypePattern PROC
 BoxTypePatternStart:
     MacroClearScreen 1eh
-    MacroDisMsg msg2
+    MacroDisMsg msg3
 
 ;==================================================
 ;               Accept Input - Dynamic
