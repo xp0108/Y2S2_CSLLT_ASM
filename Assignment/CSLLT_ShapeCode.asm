@@ -2,13 +2,13 @@
 .stack 100h
 
 .data
-    Banner  db 10,13,"======================================================================="
-            db 10,13,"          HAPPY INDEPENDENT DAY @ ASIA PACIFIC UNIVERSITY"
+    Banner  db 10,13,"============================================================================"
+            db 10,13,"          HAPPY MALAYSIA INDEPENDENT DAY @ ASIA PACIFIC UNIVERSITY"
             db 10,13,"                     ORGANIZER: APU STUDENT ARC"
             db 10,13,"                        DATE: 31 AUGUEST 2022"
             db 10,13,"                     TIME: 4:00 p.m. - 9:00 p.m."
             db 10,13,"               VENUE: ASIA PACIFIC UNIVERSITY, LEVEL 3"
-            db 10,13,"=======================================================================$"
+            db 10,13,"============================================================================$"
     menu    db 10,10,13,6,0,6,0,6,0,6,0,"MAIN MENU",0,6,0,6,0,6,0,6,0,13,10,10
             db "1. Number Patterns",13,10
             db "2. Design Patterns",13,10
@@ -18,6 +18,9 @@
             db "Select your choice: $"  
         
     invalidInputMsg db 10,10,"########## INVALID INPUT! ENTER AGAIN ##########",13,10,'$'
+    programEnd  db 10,10,"###########################################"
+                db 10,13,"                PROGRAM END"
+                db 10,13,"###########################################$"
 
     msg1 db "Here Is Number Pattern",10,10,'$' 
     msg2 db "Here Is Design Pattern",10,10,'$' 
@@ -117,6 +120,7 @@ MAIN PROC
         jmp Exit
 
     Exit: 
+        MacroDisMsg programEnd
         mov   ah,4ch
         int   21h   
 
@@ -391,7 +395,7 @@ DesignPattern endp
 ;###################################################################
 BoxTypePattern PROC
 BoxTypePatternStart:
-    MacroClearScreen 14h
+    MacroClearScreen 1eh
     MacroDisMsg msg2
 
 ;==================================================
