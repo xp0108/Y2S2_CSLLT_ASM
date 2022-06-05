@@ -618,7 +618,7 @@ NestedLoopStart:
 ;               Lower Left Triangle 
 ;==================================================
 
-    mov dh,14    ;row
+    mov dh,11    ;row
     mov dl,0    ;column
 
     mov cx,di ;row ,i=5
@@ -653,7 +653,7 @@ NestedLoopStart:
 ;==================================================
 ;               Lower Right Triangle 
 ;==================================================
-    mov dh,14    ;row
+    mov dh,11    ;row
     mov dl,18    ;column
     mov cx,di ;row count ,i=5
     LowerRightTri:
