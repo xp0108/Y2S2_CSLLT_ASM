@@ -58,8 +58,8 @@ endM
 
 MacroDisMsg Macro msg
     lea dx, msg     ; load msg
-    mov ah, 9       ;display string 
-    int 21h         ; call DOS
+    mov ah, 9       ; display string 
+    int 21h         ; display DOS
 EndM
 
 MacroAcceptChar Macro
