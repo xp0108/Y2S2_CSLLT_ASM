@@ -57,13 +57,13 @@ MacroNewLine Macro
 endM
 
 MacroDisMsg Macro msg
-    lea dx, msg  
-    mov ah, 09h 
-    int 21h  
+    lea dx, msg     ; load msg
+    mov ah, 9       ;display string 
+    int 21h         ; call DOS
 EndM
 
 MacroAcceptChar Macro
-    mov ah, 1       ;read a letter
+    mov ah, 1       ;read character
     int 21h 
 EndM
 
