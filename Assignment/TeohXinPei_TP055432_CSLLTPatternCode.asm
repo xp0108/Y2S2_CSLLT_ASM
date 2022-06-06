@@ -171,7 +171,7 @@ NumberPattern PROC
 ;==================================================
     MacroDisMsg displayNumberNoPttrn
     MacroAcceptChar
-    cbw             ;convert input into char ASCII
+    cbw             ;convert byte into word
     mov si, ax
     
     ;input is invalid
@@ -554,7 +554,7 @@ NestedLoopStart:
 ;==================================================
     MacroDisMsg displayNestedNoPttrn
     MacroAcceptChar
-    cbw             ;convert input into char ASCII
+    cbw             ;convert byte into word
     mov  di, ax     ;di carry user input
     cmp di, '4'
     jl NestedLoopStart
