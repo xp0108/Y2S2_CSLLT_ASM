@@ -667,7 +667,6 @@ NestedLoopStart:
             int 10h
             mov ah, 9 ;display chara
             int 10h     ;call BIOS               
-            ; mov bh, 0
             inc al
             mov varRandom,al
         loop LowerRightTriPrinting
