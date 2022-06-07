@@ -342,7 +342,7 @@ DesignPattern PROC
 ;==================================================
 ;               Print Row 1 & 5
 ;==================================================
-    mov varRandom, 1 ;initialize - for row 1,2,3
+    mov varRandom, 1 ;identify the row of the X
     
     LoopAgainForRow5:
         mov cl, 0
