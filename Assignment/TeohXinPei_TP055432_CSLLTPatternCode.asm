@@ -421,7 +421,7 @@ BoxTypePatternStart:
     inc incNum ;n+1
 
     mov decNum, bl
-    dec decNum ;n+1
+    dec decNum ;n-1
 
     mov ah, 2
     MacroNewLine
@@ -665,7 +665,7 @@ NestedLoopStart:
         LowerRightTriPrinting:   
             mov ah, 2 ;set cursor position
             int 10h
-            mov ah, 09h ;display chara
+            mov ah, 9 ;display chara
             int 10h     ;call BIOS               
             mov bh, 0
             inc al
